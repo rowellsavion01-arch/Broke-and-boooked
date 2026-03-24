@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Broke & Booked — The Budget Travel Bible</title>
+<meta name="application-name" content="Broke & Booked"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Broke & Booked"/>
+<meta name="description" content="The budget travel bible for your 20s and 30s. 500+ destinations, flight calculator, best time to fly."/>
+<meta name="theme-color" content="#060c14"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{--ink:#0a0806;--cream:#f5f0e8;--rust:#c1440e;--gold:#d4a843;--sage:#5a7a5e;--sky-dark:#060c14;--green:#2ecc71;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--sky-dark);color:var(--cream);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none;}
+
+.cursor{position:fixed;width:12px;height:12px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:width .2s,height .2s;}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(212,168,67,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .3s,height .3s;}
+#pgbar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--rust),var(--gold));z-index:1001;width:0%;}
+
+/* NAV */
+#ch-nav{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:900;display:flex;flex-direction:column;gap:6px;padding:1rem .6rem;background:rgba(6,12,20,.85);border-right:1px solid rgba(255,255,255,.06);backdrop-filter:blur(12px);transition:transform .3s;}
+#ch-nav.hidden{transform:translateY(-50%) translateX(-100%);}
+.nav-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);cursor:pointer;transition:background .2s,transform .2s;position:relative;}
+.nav-dot:hover,.nav-dot.active{background:var(--gold);transform:scale(1.4);}
+.nav-dot .nav-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:rgba(10,15,24,.95);border:1px solid rgba(212,168,67,.3);padding:.3rem .7rem;white-space:nowrap;font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:var(--gold);opacity:0;pointer-events:none;transition:opacity .2s;}
+.nav-dot:hover .nav-tip{opacity:1;}
+#nav-toggle{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:901;width:18px;height:40px;background:rgba(212,168,67,.2);border:none;cursor:pointer;color:var(--gold);font-size:.5rem;display:flex;align-items:center;justify-content:center;}
+
+/* PLANE */
+#plane-wrapper{position:fixed;top:0;left:-160px;z-index:500;pointer-events:none;animation:planeRoute 20s linear infinite;filter:drop-shadow(0 4px 20px rgba(212,168,67,.4));}
+@keyframes planeRoute{0%{left:-160px;top:14vh;}20%{top:9vh;}40%{top:19vh;}60%{top:7vh;}80%{top:16vh;}100%{left:calc(100vw + 160px);top:11vh;}}
+.plane-svg{width:110px;animation:planeBob 3s ease-in-out infinite;}
+@keyframes planeBob{0%,100%{transform:translateY(0) rotate(2deg);}50%{transform:translateY(-10px) rotate(-1deg);}}
+#plane-trail{position:fixed;inset:0;pointer-events:none;z-index:499;overflow:hidden;}
+.trail-dot{position:absolute;width:4px;height:4px;background:rgba(212,168,67,.6);border-radius:50%;animation:trailFade 3s ease forwards;}
+@keyframes trailFade{0%{opacity:.8;}100%{opacity:0;transform:scale(.2);}}
+.clouds-layer{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden;}
+.cloud{position:absolute;background:rgba(255,255,255,.04);border-radius:50px;filter:blur(20px);}
+.c1{width:300px;height:80px;top:8vh;left:-300px;animation:cloudDrift 35s linear infinite;}
+.c2{width:200px;height:60px;top:25vh;left:-200px;animation:cloudDrift 50s linear 10s infinite;}
+.c3{width:400px;height:90px;top:5vh;left:-400px;animation:cloudDrift 28s linear 5s infinite;opacity:.6;}
+@keyframes cloudDrift{from{left:-400px;}to{left:calc(100vw + 400px);}}
+.stars-layer{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.star{position:absolute;background:white;border-radius:50%;animation:twinkle var(--d,3s) ease-in-out infinite var(--delay,0s);}
+@keyframes twinkle{0%,100%{opacity:var(--o,.6);}50%{opacity:.05;}}
+
+/* HERO */
+.hero{min-height:100vh;position:relative;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:0 10vw;overflow:hidden;z-index:10;}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(180deg,#040810 0%,#0d1b2a 30%,#1a3a5c 65%,#e8945a 85%,#c1440e 100%);z-index:0;}
+.hero-glow{position:absolute;bottom:10%;left:50%;transform:translateX(-50%);width:80vw;height:300px;background:radial-gradient(ellipse,rgba(232,148,90,.3) 0%,transparent 70%);z-index:1;animation:glowPulse 4s ease-in-out infinite;}
+@keyframes glowPulse{0%,100%{opacity:.5;}50%{opacity:1;}}
+.hero-content{position:relative;z-index:5;}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:slideUp .8s .3s ease forwards;display:flex;align-items:center;gap:.75rem;}
+.hero-eyebrow::before{content:'';display:block;width:2rem;height:1px;background:var(--gold);}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(5rem,13vw,11rem);font-weight:900;line-height:.88;letter-spacing:-.02em;color:var(--cream);opacity:0;animation:slideUp 1s .5s ease forwards;}
+.hero-title .amp{color:var(--rust);}.hero-title em{font-style:italic;color:var(--gold);}
+.hero-sub{font-family:'Playfair Display',serif;font-size:clamp(1rem,2vw,1.4rem);font-style:italic;color:rgba(245,240,232,.6);max-width:520px;line-height:1.5;margin-top:2rem;opacity:0;animation:slideUp 1s .8s ease forwards;}
+.hero-stats{display:flex;gap:3rem;flex-wrap:wrap;margin-top:3rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.1);opacity:0;animation:slideUp 1s 1.1s ease forwards;}
+.stat{display:flex;flex-direction:column;gap:.3rem;}
+.stat-n{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:700;color:var(--gold);line-height:1;}
+.stat-l{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.2em;color:rgba(255,255,255,.3);text-transform:uppercase;}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;animation:slideUp 1s 1.5s ease forwards;z-index:5;}
+.scroll-hint span{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.3em;color:rgba(255,255,255,.3);text-transform:uppercase;}
+.scroll-arrow{width:1px;height:40px;background:linear-gradient(to bottom,rgba(212,168,67,.6),transparent);animation:scrollPulse 2s ease-in-out infinite;}
+@keyframes scrollPulse{0%,100%{transform:scaleY(1);opacity:1;}50%{transform:scaleY(.5);opacity:.3;}}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+
+/* SECTIONS */
+.section{position:relative;z-index:10;padding:7rem 10vw;}
+.section-tag{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:1rem;}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:900;line-height:1.05;margin-bottom:3rem;}
+
+/* ROUTE */
+.route-section{position:relative;padding:4rem 10vw;background:linear-gradient(180deg,#c1440e 0%,#0d1b2a 100%);overflow:hidden;z-index:10;}
+.route-line{position:absolute;top:50%;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg,var(--gold) 0,var(--gold) 12px,transparent 12px,transparent 24px);opacity:.3;transform:translateY(-50%);}
+.route-dots{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;gap:1rem;flex-wrap:wrap;}
+.route-dot-item{display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s;}
+.route-dot-item.visible{opacity:1;transform:translateY(0);}
+.route-dot-circle{width:16px;height:16px;border-radius:50%;background:var(--gold);border:3px solid rgba(212,168,67,.3);animation:dotPing 2s ease-in-out infinite;}
+@keyframes dotPing{0%,100%{box-shadow:0 0 0 0 rgba(212,168,67,.4);}50%{box-shadow:0 0 0 12px rgba(212,168,67,0);}}
+.route-dot-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:rgba(245,240,232,.6);text-transform:uppercase;}
+.route-dot-city{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--cream);}
+
+/* CALCULATOR */
+.calc-section{background:linear-gradient(180deg,#060c14 0%,#0d1b2a 100%);}
+.calc-panel{background:rgba(15,25,40,.9);border:1px solid rgba(212,168,67,.2);backdrop-filter:blur(20px);padding:3rem;position:relative;overflow:hidden;}
+.calc-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rust),var(--gold),var(--sage));}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+.form-group{display:flex;flex-direction:column;gap:.5rem;}
+.form-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;}
+
+/* SEARCH INPUT with dropdown */
+.search-wrap{position:relative;}
+.search-input{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.85rem 1rem;outline:none;transition:border-color .2s;}
+.search-input:focus{border-color:var(--gold);background:rgba(212,168,67,.05);}
+.search-input::placeholder{color:rgba(245,240,232,.3);}
+.search-dropdown{position:absolute;top:100%;left:0;right:0;background:#0d1b2a;border:1px solid rgba(212,168,67,.25);border-top:none;max-height:260px;overflow-y:auto;z-index:200;display:none;}
+.search-dropdown.open{display:block;}
+.search-dropdown::-webkit-scrollbar{width:4px;}
+.search-dropdown::-webkit-scrollbar-track{background:rgba(255,255,255,.03);}
+.search-dropdown::-webkit-scrollbar-thumb{background:rgba(212,168,67,.3);}
+.dd-item{padding:.65rem 1rem;cursor:pointer;font-size:.88rem;color:rgba(245,240,232,.7);border-bottom:1px solid rgba(255,255,255,.03);display:flex;align-items:center;gap:.6rem;transition:background .15s;}
+.dd-item:hover{background:rgba(212,168,67,.1);color:var(--cream);}
+.dd-item .dd-flag{font-size:1rem;min-width:22px;}
+.dd-item .dd-main{display:flex;flex-direction:column;gap:.1rem;}
+.dd-item .dd-name{font-size:.88rem;color:var(--cream);}
+.dd-item .dd-sub{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;color:rgba(245,240,232,.3);text-transform:uppercase;}
+.dd-item .dd-code{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--gold);margin-left:auto;}
+.dd-group{padding:.4rem 1rem;font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.2em;color:rgba(212,168,67,.5);text-transform:uppercase;background:rgba(0,0,0,.3);border-bottom:1px solid rgba(255,255,255,.04);}
+.dd-empty{padding:1rem;font-size:.85rem;color:rgba(245,240,232,.3);text-align:center;}
+
+.form-select{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.85rem 1rem;outline:none;transition:border-color .2s;}
+.form-select:focus{border-color:var(--gold);}
+.form-select option{background:#0d1b2a;}
+.form-input{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.85rem 1rem;outline:none;transition:border-color .2s;}
+.form-input:focus{border-color:var(--gold);}
+.calc-btn{background:var(--gold);color:var(--ink);border:none;cursor:pointer;font-family:'DM Mono',monospace;font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;padding:1rem 2.5rem;width:100%;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.calc-btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(212,168,67,.3);}
+#calc-results{display:none;margin-top:2.5rem;animation:fadeIn .5s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+.results-header{font-family:'Playfair Display',serif;font-size:1.1rem;font-style:italic;color:rgba(245,240,232,.5);margin-bottom:1.5rem;border-top:1px solid rgba(255,255,255,.06);padding-top:1.5rem;}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:2rem;}
+.r-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);padding:1.5rem 1.25rem;text-align:center;transition:border-color .2s;}
+.r-card:hover{border-color:rgba(212,168,67,.3);}
+.r-card-label{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.2em;color:rgba(245,240,232,.35);text-transform:uppercase;margin-bottom:.5rem;}
+.r-card-value{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--gold);line-height:1;}
+.r-card-sub{font-size:.75rem;color:rgba(245,240,232,.35);margin-top:.3rem;}
+.savings-bar-wrap{margin-bottom:2rem;}
+.savings-bar-label{display:flex;justify-content:space-between;margin-bottom:.5rem;font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.1em;color:rgba(245,240,232,.4);}
+.savings-bar{height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;}
+.savings-bar-fill{height:100%;background:linear-gradient(90deg,var(--rust),var(--gold));border-radius:4px;width:0%;transition:width 1.5s cubic-bezier(.4,0,.2,1);}
+.tips-row{display:flex;flex-wrap:wrap;gap:.75rem;}
+.tip-chip{background:rgba(42,90,50,.3);border:1px solid rgba(46,204,113,.2);font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.08em;color:#2ecc71;padding:.4rem .9rem;}
+.r-google-btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;background:var(--rust);color:white;border:none;cursor:pointer;font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;padding:.85rem 1.75rem;margin-top:1.25rem;width:100%;transition:background .2s,transform .2s;text-decoration:none;}
+.r-google-btn:hover{background:#a33a0c;transform:translateY(-2px);}
+
+/* BEST TIME */
+.besttime-section{background:#060e18;}
+.month-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-bottom:2rem;}
+@media(max-width:768px){.month-grid{grid-template-columns:repeat(6,1fr);}}
+.month-col{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;position:relative;}
+.month-bar-wrap{width:100%;height:100px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;display:flex;align-items:flex-end;}
+.month-bar{width:100%;border-radius:2px 2px 0 0;transition:height .8s cubic-bezier(.4,0,.2,1);}
+.month-bar.cheap{background:linear-gradient(to top,#2ecc71,#27ae60);}
+.month-bar.mid{background:linear-gradient(to top,var(--gold),#b8932a);}
+.month-bar.peak{background:linear-gradient(to top,var(--rust),#9a330a);}
+.month-label{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:rgba(245,240,232,.4);text-transform:uppercase;}
+.month-price{font-family:'DM Mono',monospace;font-size:.62rem;color:var(--gold);}
+.month-col:hover .month-bar{filter:brightness(1.3);}
+.month-col .month-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:rgba(10,15,24,.95);border:1px solid rgba(212,168,67,.3);padding:.4rem .75rem;white-space:nowrap;font-family:'DM Mono',monospace;font-size:.6rem;color:var(--gold);opacity:0;pointer-events:none;transition:opacity .2s;z-index:10;}
+.month-col:hover .month-tip{opacity:1;}
+.legend{display:flex;gap:2rem;flex-wrap:wrap;margin-bottom:3rem;}
+.legend-item{display:flex;align-items:center;gap:.5rem;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.1em;color:rgba(245,240,232,.5);}
+.legend-dot{width:10px;height:10px;border-radius:2px;}
+.leg-cheap{background:#2ecc71;}.leg-mid{background:var(--gold);}.leg-peak{background:var(--rust);}
+.besttime-tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;margin-top:2.5rem;}
+.bt-tip{background:rgba(255,255,255,.03);border-left:3px solid var(--gold);padding:1.25rem 1.5rem;}
+.bt-tip h4{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--cream);margin-bottom:.4rem;}
+.bt-tip p{font-size:.82rem;color:rgba(245,240,232,.45);line-height:1.65;}
+
+/* WORLD EXPLORER */
+.explorer-section{background:#060c14;}
+.explorer-controls{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem;align-items:center;}
+.explorer-search{flex:1;min-width:220px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:.95rem;padding:.75rem 1rem;outline:none;transition:border-color .2s;}
+.explorer-search:focus{border-color:var(--gold);}
+.explorer-search::placeholder{color:rgba(245,240,232,.25);}
+.exp-filter{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;padding:.5rem 1.1rem;background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(245,240,232,.4);cursor:pointer;transition:all .2s;}
+.exp-filter.active,.exp-filter:hover{background:var(--gold);color:var(--ink);border-color:var(--gold);}
+.explorer-count{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:rgba(245,240,232,.25);text-transform:uppercase;white-space:nowrap;}
+.dest-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;}
+.dest-card-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:1.5rem;cursor:pointer;transition:border-color .2s,background .2s,transform .2s;position:relative;overflow:hidden;}
+.dest-card-item:hover{border-color:rgba(212,168,67,.35);background:rgba(212,168,67,.04);transform:translateY(-2px);}
+.dest-card-item::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--rust),var(--gold));transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.dest-card-item:hover::before{transform:scaleX(1);}
+.dc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.75rem;}
+.dc-flag{font-size:1.8rem;}
+.dc-type{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;padding:.2rem .5rem;border-radius:2px;}
+.dc-type.city{background:rgba(45,106,143,.2);color:#5ab4d4;border:1px solid rgba(45,106,143,.3);}
+.dc-type.island{background:rgba(90,122,94,.2);color:#7ec882;border:1px solid rgba(90,122,94,.3);}
+.dc-type.country{background:rgba(212,168,67,.1);color:var(--gold);border:1px solid rgba(212,168,67,.2);}
+.dc-name{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:var(--cream);margin-bottom:.2rem;}
+.dc-sub{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.1em;color:rgba(245,240,232,.3);text-transform:uppercase;margin-bottom:.75rem;}
+.dc-stats{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:.9rem;}
+.dc-stat{display:flex;flex-direction:column;gap:.1rem;}
+.dc-stat-val{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gold);}
+.dc-stat-lbl{font-family:'DM Mono',monospace;font-size:.55rem;letter-spacing:.1em;color:rgba(245,240,232,.25);text-transform:uppercase;}
+.dc-btn{display:inline-flex;align-items:center;gap:.4rem;background:transparent;border:1px solid rgba(212,168,67,.25);color:var(--gold);font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.3rem .75rem;cursor:pointer;transition:all .2s;text-decoration:none;}
+.dc-btn:hover{background:var(--gold);color:var(--ink);}
+.dc-btn .ldot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:livepulse 1.5s ease-in-out infinite;}
+@keyframes livepulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.load-more{display:block;margin:2rem auto 0;background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(245,240,232,.4);font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;padding:.8rem 2.5rem;cursor:pointer;transition:all .2s;}
+.load-more:hover{border-color:var(--gold);color:var(--gold);}
+
+/* BUDGET */
+.budget-section{background:#060e18;}
+.budget-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;}
+.b-card{border:1px solid rgba(255,255,255,.06);padding:2rem 1.75rem;opacity:0;transform:translateX(-20px);transition:opacity .6s,transform .6s,border-color .3s;}
+.b-card.visible{opacity:1;transform:translateX(0);}
+.b-card:hover{border-color:rgba(212,168,67,.4);}
+.b-cat{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;}
+.b-amount{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:700;color:var(--cream);line-height:1;margin-bottom:.4rem;}
+.b-period{font-size:.78rem;color:rgba(245,240,232,.3);margin-bottom:1.2rem;}
+.b-bar{height:3px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden;margin-bottom:1rem;}
+.b-fill{height:100%;background:linear-gradient(90deg,var(--rust),var(--gold));border-radius:4px;width:0%;transition:width 1.5s cubic-bezier(.4,0,.2,1);}
+.b-tip{font-size:.8rem;color:rgba(245,240,232,.4);line-height:1.65;}
+
+/* CHAPTERS */
+.chapters-section{background:#0f1c2e;}
+.chapters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5px;background:rgba(255,255,255,.06);}
+.ch-card{background:#0a1520;padding:2.5rem 2rem;position:relative;overflow:hidden;opacity:0;transform:translateY(30px);transition:opacity .6s,transform .6s,background .3s;cursor:pointer;}
+.ch-card.visible{opacity:1;transform:translateY(0);}
+.ch-card:hover{background:#112238;}
+.ch-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rust),var(--gold));transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+.ch-card:hover::before{transform:scaleX(1);}
+.ch-num{font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;color:rgba(255,255,255,.03);line-height:1;position:absolute;top:1rem;right:1.5rem;}
+.ch-icon{font-size:2rem;margin-bottom:1rem;display:block;transition:transform .3s;}
+.ch-card:hover .ch-icon{transform:scale(1.2) rotate(-5deg);}
+.ch-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--cream);margin-bottom:.6rem;line-height:1.2;}
+.ch-desc{font-size:.85rem;color:rgba(245,240,232,.45);line-height:1.7;margin-bottom:1rem;}
+.ch-topics{list-style:none;display:flex;flex-direction:column;gap:.35rem;}
+.ch-topics li{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.04em;color:rgba(245,240,232,.35);display:flex;align-items:center;gap:.5rem;}
+.ch-topics li::before{content:'→';color:var(--rust);}
+
+/* MINDSET */
+.mindset-section{background:#060e18;}
+.mindset-list{max-width:800px;}
+.m-item{display:grid;grid-template-columns:80px 1fr;gap:2rem;align-items:start;padding:2.5rem 0;border-bottom:1px solid rgba(255,255,255,.06);opacity:0;transform:translateX(-30px);transition:opacity .6s,transform .6s;}
+.m-item.visible{opacity:1;transform:translateX(0);}
+.m-item:last-child{border-bottom:none;}
+.m-num{font-family:'Playfair Display',serif;font-size:4rem;font-weight:900;color:rgba(255,255,255,.04);line-height:1;text-align:right;}
+.m-content h3{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--cream);margin-bottom:.5rem;}
+.m-content p{font-size:.88rem;color:rgba(245,240,232,.5);line-height:1.8;}
+
+/* CTA */
+.cta-section{min-height:60vh;background:linear-gradient(180deg,#0d1b2a 0%,#1a3a5c 40%,#c1440e 100%);display:flex;align-items:center;justify-content:center;text-align:center;padding:7rem 10vw;position:relative;overflow:hidden;}
+.cta-section::before{content:'✈';position:absolute;left:5%;top:50%;transform:translateY(-50%) rotate(-15deg);font-size:20rem;color:rgba(255,255,255,.02);pointer-events:none;animation:ctaDrift 20s linear infinite;}
+@keyframes ctaDrift{from{left:-20%;}to{left:110%;}}
+.cta-inner{position:relative;z-index:2;}
+.cta-title{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,5vw,5rem);font-weight:900;line-height:1.05;color:var(--cream);margin-bottom:1.5rem;opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s;}
+.cta-title.visible{opacity:1;transform:translateY(0);}
+.cta-title em{font-style:italic;color:var(--gold);}
+.cta-sub{font-size:1.05rem;color:rgba(245,240,232,.65);max-width:480px;margin:0 auto 2.5rem;line-height:1.7;opacity:0;transition:opacity .8s .2s;}
+.cta-sub.visible{opacity:1;}
+.cta-btn{display:inline-block;background:var(--gold);color:var(--ink);font-family:'DM Mono',monospace;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;padding:1.2rem 3.5rem;border:none;cursor:pointer;position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(212,168,67,.3);}
+.cta-includes{display:flex;justify-content:center;gap:2rem;margin-top:2rem;flex-wrap:wrap;}
+.ci{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.15em;color:rgba(245,240,232,.35);text-transform:uppercase;display:flex;align-items:center;gap:.4rem;}
+.ci::before{content:'✓';color:var(--sage);}
+
+footer{background:#030609;padding:2.5rem 10vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;position:relative;z-index:10;border-top:1px solid rgba(255,255,255,.05);}
+.foot-brand{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;font-style:italic;color:var(--cream);}
+.foot-brand span{color:var(--gold);}
+.foot-note{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:rgba(255,255,255,.15);text-transform:uppercase;}
+
+/* API MODAL */
+#api-modal{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.88);backdrop-filter:blur(8px);padding:2rem;}
+#api-modal.show{display:flex;}
+.modal-box{background:#0d1b2a;border:1px solid rgba(212,168,67,.3);max-width:560px;width:100%;padding:2.5rem;position:relative;animation:modalIn .3s ease;}
+@keyframes modalIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.modal-box h3{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--cream);margin-bottom:.5rem;}
+.modal-sub{font-size:.84rem;color:rgba(245,240,232,.4);margin-bottom:1.5rem;line-height:1.7;}
+.api-step{display:flex;gap:.9rem;margin-bottom:1.1rem;align-items:flex-start;}
+.api-snum{min-width:26px;height:26px;border-radius:50%;background:var(--rust);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.62rem;color:white;font-weight:700;flex-shrink:0;}
+.api-stext{font-size:.83rem;color:rgba(245,240,232,.55);line-height:1.65;}
+.api-stext a{color:var(--gold);}
+.api-stext strong{color:var(--cream);}
+.api-key-row{display:flex;gap:.75rem;margin-top:1.5rem;}
+.api-key-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--cream);font-family:'DM Mono',monospace;font-size:.78rem;padding:.75rem 1rem;outline:none;transition:border-color .2s;}
+.api-key-input:focus{border-color:var(--gold);}
+.api-key-input::placeholder{color:rgba(245,240,232,.18);}
+.api-save-btn{background:var(--gold);color:var(--ink);border:none;cursor:pointer;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;padding:.75rem 1.5rem;transition:transform .2s;white-space:nowrap;}
+.api-save-btn:hover{transform:scale(1.03);}
+.modal-close{position:absolute;top:1rem;right:1.25rem;background:none;border:none;color:rgba(245,240,232,.3);cursor:pointer;font-size:1.1rem;}
+.modal-close:hover{color:var(--cream);}
+.api-note{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.08em;color:rgba(245,240,232,.2);margin-top:1rem;line-height:1.6;}
+
+@media(max-width:768px){.section{padding:5rem 5vw;}.hero{padding:0 5vw;}.route-section{padding:4rem 5vw;}.calc-grid{grid-template-columns:1fr;}footer{padding:2rem 5vw;}#plane-wrapper,#ch-nav,#nav-toggle{display:none;}}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<div id="pgbar"></div>
+
+<!-- CHAPTER NAV -->
+<nav id="ch-nav">
+  <div class="nav-dot active" data-target="hero"><span class="nav-tip">Cover</span></div>
+  <div class="nav-dot" data-target="calc-section"><span class="nav-tip">✈ Flight Calculator</span></div>
+  <div class="nav-dot" data-target="besttime-section"><span class="nav-tip">📅 Best Time to Fly</span></div>
+  <div class="nav-dot" data-target="explorer-section"><span class="nav-tip">🌍 World Explorer</span></div>
+  <div class="nav-dot" data-target="chapters-section"><span class="nav-tip">📖 12 Chapters</span></div>
+  <div class="nav-dot" data-target="budget-section"><span class="nav-tip">📊 Monthly Budget</span></div>
+  <div class="nav-dot" data-target="mindset-section"><span class="nav-tip">🧠 6 Rules</span></div>
+  <div class="nav-dot" data-target="cta-section"><span class="nav-tip">🚀 Get the Book</span></div>
+</nav>
+<button id="nav-toggle">‹</button>
+
+<!-- API MODAL -->
+<div id="api-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('api-modal').classList.remove('show')">✕</button>
+    <h3>🔌 Connect Live Flight Prices</h3>
+    <p class="modal-sub">3 steps to get your free API key and activate real-time prices. Takes 5 minutes.</p>
+    <div class="api-step"><div class="api-snum">1</div><div class="api-stext">Go to <a href="https://aviationstack.com" target="_blank">aviationstack.com</a> → click <strong>"Get Free API Key"</strong>. Free, no credit card. 500 requests/month.</div></div>
+    <div class="api-step"><div class="api-snum">2</div><div class="api-stext">After signup, go to your <strong>dashboard</strong> and copy your API key.</div></div>
+    <div class="api-step"><div class="api-snum">3</div><div class="api-stext">Paste it below and click <strong>Save & Activate</strong>.</div></div>
+    <div class="api-key-row">
+      <input class="api-key-input" id="api-key-input" type="text" placeholder="Paste your API key here..."/>
+      <button class="api-save-btn" onclick="saveApiKey()">Activate</button>
+    </div>
+    <p class="api-note">⚡ Free tier · 500 req/month · Key stored locally · Prices refresh every 24h</p>
+  </div>
+</div>
+
+<div class="stars-layer" id="stars"></div>
+<div class="clouds-layer"><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div></div>
+<div id="plane-trail"></div>
+<div id="plane-wrapper">
+  <svg class="plane-svg" viewBox="0 0 120 60" fill="none">
+    <ellipse cx="60" cy="30" rx="48" ry="10" fill="#f5f0e8"/>
+    <path d="M108 30 Q120 28 118 30 Q120 32 108 30Z" fill="#d4a843"/>
+    <path d="M18 30 L8 18 L20 24Z" fill="#c1440e"/><path d="M18 30 L8 42 L20 36Z" fill="#c1440e"/>
+    <path d="M55 28 L30 10 L38 28Z" fill="#d4a843"/><path d="M55 32 L30 50 L38 32Z" fill="#d4a843"/>
+    <path d="M28 28 L18 22 L24 28Z" fill="#c1440e"/><path d="M28 32 L18 38 L24 32Z" fill="#c1440e"/>
+    <circle cx="75" cy="27" r="3" fill="#2d6a8f" opacity=".8"/><circle cx="65" cy="27" r="3" fill="#2d6a8f" opacity=".8"/>
+    <ellipse cx="45" cy="22" rx="5" ry="3" fill="#d4a843" opacity=".6"/><ellipse cx="45" cy="38" rx="5" ry="3" fill="#d4a843" opacity=".6"/>
+  </svg>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div><div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">The Essential Guide for Your 20s &amp; 30s</div>
+    <h1 class="hero-title">Broke<br><span class="amp">&amp;</span><br><em>Booked</em></h1>
+    <p class="hero-sub">The complete blueprint for building a life you love — without draining your bank account or canceling your next adventure.</p>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-n" data-count="12">0</span><span class="stat-l">Chapters</span></div>
+      <div class="stat"><span class="stat-n" data-count="50">0</span><span class="stat-l">Budget Hacks</span></div>
+      <div class="stat"><span class="stat-n" data-count="500">0</span><span class="stat-l">Destinations</span></div>
+      <div class="stat"><span class="stat-n">$0</span><span class="stat-l">Excuses Left</span></div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>Scroll to explore</span><div class="scroll-arrow"></div></div>
+</section>
+
+<!-- ROUTE -->
+<section class="route-section" id="route-section">
+  <div class="route-line"></div>
+  <div class="route-dots">
+    <div class="route-dot-item"><div class="route-dot-circle"></div><span class="route-dot-city">🗽 NYC</span><span class="route-dot-label">Home base</span></div>
+    <div class="route-dot-item"><div class="route-dot-circle"></div><span class="route-dot-city">🗼 Paris</span><span class="route-dot-label">$58/day</span></div>
+    <div class="route-dot-item"><div class="route-dot-circle"></div><span class="route-dot-city">🕌 Istanbul</span><span class="route-dot-label">$35/day</span></div>
+    <div class="route-dot-item"><div class="route-dot-circle"></div><span class="route-dot-city">🌴 Bali</span><span class="route-dot-label">$40/day</span></div>
+    <div class="route-dot-item"><div class="route-dot-circle"></div><span class="route-dot-city">🏯 Tokyo</span><span class="route-dot-label">$65/day</span></div>
+    <div class="route-dot-item"><div class="route-dot-circle"></div><span class="route-dot-city">🦁 Nairobi</span><span class="route-dot-label">$42/day</span></div>
+    <div class="route-dot-item"><div class="route-dot-circle"></div><span class="route-dot-city">🏖️ Tulum</span><span class="route-dot-label">$55/day</span></div>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section class="section calc-section" id="calc-section">
+  <span class="section-tag">Interactive Tool</span>
+  <h2 class="section-title">✈ Flight Budget Calculator</h2>
+  <div class="calc-panel">
+    <div class="calc-grid">
+      <div class="form-group">
+        <label class="form-label">Flying From — Search any airport</label>
+        <div class="search-wrap">
+          <input class="search-input" id="origin-search" placeholder="Type city or airport code..." autocomplete="off"/>
+          <input type="hidden" id="origin-code"/>
+          <div class="search-dropdown" id="origin-dropdown"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Destination — Search anywhere in the world</label>
+        <div class="search-wrap">
+          <input class="search-input" id="dest-search" placeholder="Type country, city, or island..." autocomplete="off"/>
+          <input type="hidden" id="dest-code"/>
+          <div class="search-dropdown" id="dest-dropdown"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Travel Date</label>
+        <input type="date" class="form-input" id="travel-date"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Number of Travelers</label>
+        <select class="form-select" id="travelers">
+          <option value="1">1 person (solo)</option>
+          <option value="2">2 people (couple)</option>
+          <option value="3">3 people</option>
+          <option value="4">4 people (group)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Trip Length (Days)</label>
+        <input type="number" class="form-input" id="trip-days" placeholder="e.g. 14" min="1" max="365"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Current Savings ($)</label>
+        <input type="number" class="form-input" id="current-savings" placeholder="e.g. 500" min="0"/>
+      </div>
+    </div>
+    <button class="calc-btn" id="calc-go">Calculate My Budget Plan ✈</button>
+    <div id="calc-results">
+      <p class="results-header" id="results-title"></p>
+      <div class="results-grid">
+        <div class="r-card"><div class="r-card-label">Flight Cost</div><div class="r-card-value" id="r-flight">—</div><div class="r-card-sub" id="r-flight-sub"></div></div>
+        <div class="r-card"><div class="r-card-label">Daily Budget</div><div class="r-card-value" id="r-daily">—</div><div class="r-card-sub">per person/day</div></div>
+        <div class="r-card"><div class="r-card-label">Total Trip Cost</div><div class="r-card-value" id="r-total">—</div><div class="r-card-sub" id="r-total-sub"></div></div>
+        <div class="r-card"><div class="r-card-label">Still Need</div><div class="r-card-value" id="r-need">—</div><div class="r-card-sub">after savings</div></div>
+      </div>
+      <div class="savings-bar-wrap">
+        <div class="savings-bar-label"><span>Savings Progress</span><span id="r-pct">0%</span></div>
+        <div class="savings-bar"><div class="savings-bar-fill" id="r-bar"></div></div>
+      </div>
+      <div class="results-grid">
+        <div class="r-card"><div class="r-card-label">Save Daily</div><div class="r-card-value" id="r-save-daily">—</div><div class="r-card-sub">every day</div></div>
+        <div class="r-card"><div class="r-card-label">Save Weekly</div><div class="r-card-value" id="r-save-weekly">—</div><div class="r-card-sub">every week</div></div>
+        <div class="r-card"><div class="r-card-label">Save Monthly</div><div class="r-card-value" id="r-save-monthly">—</div><div class="r-card-sub">every month</div></div>
+        <div class="r-card"><div class="r-card-label">Days Until Trip</div><div class="r-card-value" id="r-days-left">—</div><div class="r-card-sub">from today</div></div>
+      </div>
+      <div class="tips-row" id="r-tips"></div>
+    </div>
+  </div>
+</section>
+
+<!-- BEST TIME -->
+<section class="section besttime-section" id="besttime-section">
+  <span class="section-tag">Smart Booking Guide</span>
+  <h2 class="section-title">📅 Best Time to Fly</h2>
+  <p style="color:rgba(245,240,232,.5);font-size:.9rem;margin-bottom:2rem;max-width:600px;">Average flight prices from the US vary dramatically by month. Green = cheapest, amber = moderate, red = peak. Hover for tips.</p>
+  <div style="margin-bottom:1rem;">
+    <label class="form-label" style="display:inline-block;margin-right:1rem;">Filter by region:</label>
+    <select class="form-select" id="region-filter" style="display:inline-block;width:auto;padding:.5rem 1rem;">
+      <option value="all">All Destinations</option>
+      <option value="europe">Europe</option>
+      <option value="asia">Asia / Pacific</option>
+      <option value="latam">Latin America</option>
+      <option value="africa">Africa / Middle East</option>
+      <option value="caribbean">Caribbean / Islands</option>
+    </select>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot leg-cheap"></div>Cheapest (save 30–50%)</div>
+    <div class="legend-item"><div class="legend-dot leg-mid"></div>Moderate</div>
+    <div class="legend-item"><div class="legend-dot leg-peak"></div>Peak season</div>
+  </div>
+  <div class="month-grid" id="month-grid"></div>
+  <div class="besttime-tips">
+    <div class="bt-tip"><h4>🔍 Book 6–8 Weeks Out</h4><p>Sweet spot for budget airlines. Prices spike inside 3 weeks and often drop after 6 months.</p></div>
+    <div class="bt-tip"><h4>📆 Fly Tuesday or Wednesday</h4><p>Midweek flights are 15–25% cheaper than Friday and Sunday. Set alerts for these days.</p></div>
+    <div class="bt-tip"><h4>🌧️ Shoulder Season is Gold</h4><p>Apr–May and Sep–Oct: near-perfect weather at 30–40% lower than peak prices.</p></div>
+    <div class="bt-tip"><h4>⏰ Set Price Alerts Now</h4><p>Google Flights and Hopper track your route. Prices drop unpredictably — alerts catch the dips.</p></div>
+  </div>
+</section>
+
+<!-- WORLD EXPLORER -->
+<section class="section explorer-section" id="explorer-section">
+  <span class="section-tag">500+ Destinations</span>
+  <h2 class="section-title">🌍 World Destination Explorer</h2>
+  <p style="color:rgba(245,240,232,.5);font-size:.9rem;margin-bottom:2rem;max-width:640px;">Search every country, city, island, and airport in our database. Click any card to check today's live price on Google Flights.</p>
+  <div class="explorer-controls">
+    <input class="explorer-search" id="explorer-search" placeholder="🔍  Search any country, city, or island..."/>
+    <button class="exp-filter active" data-ef="all">All</button>
+    <button class="exp-filter" data-ef="city">Cities</button>
+    <button class="exp-filter" data-ef="island">Islands</button>
+    <button class="exp-filter" data-ef="country">Countries</button>
+    <button class="exp-filter" data-ef="cheap">Budget (&lt;$500)</button>
+    <span class="explorer-count" id="explorer-count">Loading...</span>
+  </div>
+  <div class="dest-cards" id="dest-cards"></div>
+  <button class="load-more" id="load-more">Load More Destinations ↓</button>
+</section>
+
+<!-- CHAPTERS -->
+<section class="section chapters-section" id="chapters-section">
+  <span class="section-tag">Inside the Book</span>
+  <h2 class="section-title">12 Chapters. One Life-Changing System.</h2>
+  <div class="chapters-grid">
+    <div class="ch-card"><div class="ch-num">01</div><span class="ch-icon">🧠</span><h3 class="ch-title">The Money Mindset Reset</h3><p class="ch-desc">Unlearn the financial myths keeping you broke and grounded.</p><ul class="ch-topics"><li>Why saving more isn't the answer</li><li>The cost of waiting to travel</li><li>Scarcity vs abundance thinking</li></ul></div>
+    <div class="ch-card"><div class="ch-num">02</div><span class="ch-icon">💰</span><h3 class="ch-title">Build Your Budget Blueprint</h3><p class="ch-desc">Zero-based budget designed for people who travel regularly.</p><ul class="ch-topics"><li>The 50/30/20 travel remix</li><li>Automating your travel fund</li><li>Tracking without stress</li></ul></div>
+    <div class="ch-card"><div class="ch-num">03</div><span class="ch-icon">✂️</span><h3 class="ch-title">Cut the Right Things</h3><p class="ch-desc">Which expenses to slash and which are worth every penny.</p><ul class="ch-topics"><li>The joy audit method</li><li>Subscriptions killing your fund</li><li>Smart swaps not deprivation</li></ul></div>
+    <div class="ch-card"><div class="ch-num">04</div><span class="ch-icon">✈️</span><h3 class="ch-title">Flight Hacking 101</h3><p class="ch-desc">Find flights 60–80% cheaper with tools most travelers ignore.</p><ul class="ch-topics"><li>Best fare-tracking tools</li><li>Hidden city ticketing legally</li><li>When to book vs wait</li></ul></div>
+    <div class="ch-card"><div class="ch-num">05</div><span class="ch-icon">🏨</span><h3 class="ch-title">Sleep Cheap, Sleep Well</h3><p class="ch-desc">From hostels to house-sitting — all vetted and honest.</p><ul class="ch-topics"><li>Hostel hacks for solo travelers</li><li>House-sitting &amp; home exchanges</li><li>Airbnb vs local apartments</li></ul></div>
+    <div class="ch-card"><div class="ch-num">06</div><span class="ch-icon">🍜</span><h3 class="ch-title">Eat Like a Local</h3><p class="ch-desc">Experience food culture fully without tourist trap pricing.</p><ul class="ch-topics"><li>Market strategy every country</li><li>Street food safety guide</li><li>Cooking as a travel skill</li></ul></div>
+    <div class="ch-card"><div class="ch-num">07</div><span class="ch-icon">💳</span><h3 class="ch-title">Travel Cards &amp; Rewards</h3><p class="ch-desc">Use points, miles, and cashback to fund entire trips.</p><ul class="ch-topics"><li>Best no-fee travel cards 2025</li><li>Sign-up bonus strategy</li><li>Points transfers explained</li></ul></div>
+    <div class="ch-card"><div class="ch-num">08</div><span class="ch-icon">🌍</span><h3 class="ch-title">Slow Travel &amp; Geo-Arbitrage</h3><p class="ch-desc">Stay longer, spend less, live better.</p><ul class="ch-topics"><li>Slow travel cuts costs 40%</li><li>Best geo-arbitrage countries</li><li>Monthly cost breakdowns</li></ul></div>
+    <div class="ch-card"><div class="ch-num">09</div><span class="ch-icon">💻</span><h3 class="ch-title">Fund Your Travels Remotely</h3><p class="ch-desc">Side hustles and remote jobs that actually fund travel.</p><ul class="ch-topics"><li>Freelance skills worth learning</li><li>Remote job boards that convert</li><li>Building income while abroad</li></ul></div>
+    <div class="ch-card"><div class="ch-num">10</div><span class="ch-icon">🛡️</span><h3 class="ch-title">Insurance &amp; Safety</h3><p class="ch-desc">What you need vs what they upsell you.</p><ul class="ch-topics"><li>Insurance comparison guide</li><li>Health &amp; emergency planning</li><li>Digital safety abroad</li></ul></div>
+    <div class="ch-card"><div class="ch-num">11</div><span class="ch-icon">📦</span><h3 class="ch-title">Pack Light, Spend Less</h3><p class="ch-desc">One bag travel changes everything.</p><ul class="ch-topics"><li>Ultimate carry-on packing list</li><li>Gear worth investing in</li><li>Avoiding baggage fees forever</li></ul></div>
+    <div class="ch-card"><div class="ch-num">12</div><span class="ch-icon">🗺️</span><h3 class="ch-title">Your 90-Day Launch Plan</h3><p class="ch-desc">Step-by-step plan to book your first budget trip.</p><ul class="ch-topics"><li>Week-by-week prep guide</li><li>Choosing your first destination</li><li>Day 1 abroad checklist</li></ul></div>
+  </div>
+</section>
+
+<!-- BUDGET -->
+<section class="section budget-section" id="budget-section">
+  <span class="section-tag">Sample Monthly Budget</span>
+  <h2 class="section-title">Travel Full-Time on $1,800/Month</h2>
+  <div class="budget-grid">
+    <div class="b-card"><div class="b-cat">Accommodation</div><div class="b-amount">$450</div><div class="b-period">per month</div><div class="b-bar"><div class="b-fill" data-width="50"></div></div><p class="b-tip">Hostels, house-sits, or monthly Airbnb in Southeast Asia or Eastern Europe</p></div>
+    <div class="b-card"><div class="b-cat">Flights</div><div class="b-amount">$250</div><div class="b-period">per month avg</div><div class="b-bar"><div class="b-fill" data-width="28"></div></div><p class="b-tip">Averaged across the year using points, budget carriers, and smart booking windows</p></div>
+    <div class="b-card"><div class="b-cat">Food</div><div class="b-amount">$350</div><div class="b-period">per month</div><div class="b-bar"><div class="b-fill" data-width="39"></div></div><p class="b-tip">Mix of street food, markets, and occasional restaurants</p></div>
+    <div class="b-card"><div class="b-cat">Transport</div><div class="b-amount">$150</div><div class="b-period">per month</div><div class="b-bar"><div class="b-fill" data-width="17"></div></div><p class="b-tip">Local buses, trains, shared rides — no tourist taxis needed</p></div>
+    <div class="b-card"><div class="b-cat">Experiences</div><div class="b-amount">$300</div><div class="b-period">per month</div><div class="b-bar"><div class="b-fill" data-width="33"></div></div><p class="b-tip">Tours, diving, temples, museums — the stuff you came for</p></div>
+    <div class="b-card"><div class="b-cat">Emergency Fund</div><div class="b-amount">$300</div><div class="b-period">per month</div><div class="b-bar"><div class="b-fill" data-width="33"></div></div><p class="b-tip">Always set aside a buffer. Built before you leave.</p></div>
+  </div>
+</section>
+
+<!-- MINDSET -->
+<section class="section mindset-section" id="mindset-section">
+  <span class="section-tag">Core Principles</span>
+  <h2 class="section-title">The 6 Rules of Budget Travel</h2>
+  <div class="mindset-list">
+    <div class="m-item"><div class="m-num">01</div><div class="m-content"><h3>Plan the budget before the destination</h3><p>Know your number first, then find the destination that fits it — not the other way around.</p></div></div>
+    <div class="m-item"><div class="m-num">02</div><div class="m-content"><h3>Travel slowly, spend less</h3><p>Movement costs money. Staying longer in one place cuts costs dramatically and gives a richer experience.</p></div></div>
+    <div class="m-item"><div class="m-num">03</div><div class="m-content"><h3>Free experiences beat paid ones</h3><p>The best memories rarely have price tags — hiking, markets, local friendships, neighborhoods.</p></div></div>
+    <div class="m-item"><div class="m-num">04</div><div class="m-content"><h3>Your home expenses travel with you</h3><p>Subscriptions, phone plans, and commitments back home eat your travel budget before you even leave.</p></div></div>
+    <div class="m-item"><div class="m-num">05</div><div class="m-content"><h3>Income doesn't have to stay home</h3><p>Remote work and freelancing have changed everything. Chapter 9 breaks down exactly how to start.</p></div></div>
+    <div class="m-item"><div class="m-num">06</div><div class="m-content"><h3>The trip that doesn't happen costs the most</h3><p>The money you save by waiting is outweighed by experiences, connections, and growth you miss.</p></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="cta-section">
+  <div class="cta-inner">
+    <h2 class="cta-title">Your next trip<br>starts <em>right now.</em></h2>
+    <p class="cta-sub">Over 50,000 words of practical, no-fluff guidance for the generation that travels on its own terms.</p>
+    <button class="cta-btn">Get the eBook — $10</button>
+    <div class="cta-includes">
+      <span class="ci">200+ Pages</span>
+      <span class="ci">500+ Destinations</span>
+      <span class="ci">Interactive Calculator</span>
+      <span class="ci">Instant Download</span>
+      <span class="ci">Lifetime Updates</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-brand">Broke <span>&amp;</span> Booked</div>
+  <div class="foot-note">Digital Edition · Travel Smart. Live Fully. · 2025</div>
+</footer>
+
+<script>
+// ════════════════════════════════════════════════════════
+//  MASSIVE GLOBAL DATABASE
+// ════════════════════════════════════════════════════════
+
+const AIRPORTS = [
+  // USA
+  {code:'JFK',name:'John F. Kennedy Intl',city:'New York',country:'USA',flag:'🇺🇸'},
+  {code:'EWR',name:'Newark Liberty Intl',city:'New York',country:'USA',flag:'🇺🇸'},
+  {code:'LGA',name:'LaGuardia',city:'New York',country:'USA',flag:'🇺🇸'},
+  {code:'LAX',name:'Los Angeles Intl',city:'Los Angeles',country:'USA',flag:'🇺🇸'},
+  {code:'ORD',name:"O'Hare Intl",city:'Chicago',country:'USA',flag:'🇺🇸'},
+  {code:'MDW',name:'Midway',city:'Chicago',country:'USA',flag:'🇺🇸'},
+  {code:'MIA',name:'Miami Intl',city:'Miami',country:'USA',flag:'🇺🇸'},
+  {code:'FLL',name:'Fort Lauderdale',city:'Fort Lauderdale',country:'USA',flag:'🇺🇸'},
+  {code:'DFW',name:'Dallas/Fort Worth Intl',city:'Dallas',country:'USA',flag:'🇺🇸'},
+  {code:'DAL',name:'Dallas Love Field',city:'Dallas',country:'USA',flag:'🇺🇸'},
+  {code:'SEA',name:'Seattle-Tacoma Intl',city:'Seattle',country:'USA',flag:'🇺🇸'},
+  {code:'ATL',name:'Hartsfield-Jackson',city:'Atlanta',country:'USA',flag:'🇺🇸'},
+  {code:'SFO',name:'San Francisco Intl',city:'San Francisco',country:'USA',flag:'🇺🇸'},
+  {code:'OAK',name:'Oakland Intl',city:'Oakland',country:'USA',flag:'🇺🇸'},
+  {code:'BOS',name:'Logan Intl',city:'Boston',country:'USA',flag:'🇺🇸'},
+  {code:'DEN',name:'Denver Intl',city:'Denver',country:'USA',flag:'🇺🇸'},
+  {code:'PHX',name:'Phoenix Sky Harbor',city:'Phoenix',country:'USA',flag:'🇺🇸'},
+  {code:'IAH',name:'George Bush Intl',city:'Houston',country:'USA',flag:'🇺🇸'},
+  {code:'HOU',name:'Hobby Airport',city:'Houston',country:'USA',flag:'🇺🇸'},
+  {code:'MSP',name:'Minneapolis-Saint Paul Intl',city:'Minneapolis',country:'USA',flag:'🇺🇸'},
+  {code:'DTW',name:'Detroit Metro',city:'Detroit',country:'USA',flag:'🇺🇸'},
+  {code:'PHL',name:'Philadelphia Intl',city:'Philadelphia',country:'USA',flag:'🇺🇸'},
+  {code:'CLT',name:'Charlotte Douglas Intl',city:'Charlotte',country:'USA',flag:'🇺🇸'},
+  {code:'LAS',name:'Harry Reid Intl',city:'Las Vegas',country:'USA',flag:'🇺🇸'},
+  {code:'MCO',name:'Orlando Intl',city:'Orlando',country:'USA',flag:'🇺🇸'},
+  {code:'TPA',name:'Tampa Intl',city:'Tampa',country:'USA',flag:'🇺🇸'},
+  {code:'PDX',name:'Portland Intl',city:'Portland',country:'USA',flag:'🇺🇸'},
+  {code:'SAN',name:'San Diego Intl',city:'San Diego',country:'USA',flag:'🇺🇸'},
+  {code:'MSY',name:'Louis Armstrong Intl',city:'New Orleans',country:'USA',flag:'🇺🇸'},
+  {code:'BWI',name:'Baltimore/Washington Intl',city:'Baltimore',country:'USA',flag:'🇺🇸'},
+  {code:'IAD',name:'Dulles Intl',city:'Washington DC',country:'USA',flag:'🇺🇸'},
+  {code:'DCA',name:'Reagan National',city:'Washington DC',country:'USA',flag:'🇺🇸'},
+  {code:'SLC',name:'Salt Lake City Intl',city:'Salt Lake City',country:'USA',flag:'🇺🇸'},
+  {code:'HNL',name:'Honolulu Intl',city:'Honolulu',country:'USA',flag:'🇺🇸'},
+  {code:'ANC',name:'Ted Stevens Anchorage Intl',city:'Anchorage',country:'USA',flag:'🇺🇸'},
+  {code:'RDU',name:'Raleigh-Durham Intl',city:'Raleigh',country:'USA',flag:'🇺🇸'},
+  {code:'STL',name:'St. Louis Lambert Intl',city:'St. Louis',country:'USA',flag:'🇺🇸'},
+  {code:'MCI',name:'Kansas City Intl',city:'Kansas City',country:'USA',flag:'🇺🇸'},
+  {code:'CMH',name:'John Glenn Columbus Intl',city:'Columbus',country:'USA',flag:'🇺🇸'},
+  {code:'IND',name:'Indianapolis Intl',city:'Indianapolis',country:'USA',flag:'🇺🇸'},
+  {code:'PIT',name:'Pittsburgh Intl',city:'Pittsburgh',country:'USA',flag:'🇺🇸'},
+  {code:'CLE',name:'Cleveland Hopkins Intl',city:'Cleveland',country:'USA',flag:'🇺🇸'},
+  {code:'MKE',name:'Milwaukee Mitchell Intl',city:'Milwaukee',country:'USA',flag:'🇺🇸'},
+  {code:'OMA',name:'Eppley Airfield',city:'Omaha',country:'USA',flag:'🇺🇸'},
+  {code:'AUS',name:'Austin-Bergstrom Intl',city:'Austin',country:'USA',flag:'🇺🇸'},
+  {code:'SAT',name:'San Antonio Intl',city:'San Antonio',country:'USA',flag:'🇺🇸'},
+  {code:'ABQ',name:'Albuquerque Intl',city:'Albuquerque',country:'USA',flag:'🇺🇸'},
+  {code:'TUL',name:'Tulsa Intl',city:'Tulsa',country:'USA',flag:'🇺🇸'},
+  {code:'OKC',name:'Will Rogers World Airport',city:'Oklahoma City',country:'USA',flag:'🇺🇸'},
+  {code:'BNA',name:'Nashville Intl',city:'Nashville',country:'USA',flag:'🇺🇸'},
+  {code:'MEM',name:'Memphis Intl',city:'Memphis',country:'USA',flag:'🇺🇸'},
+  {code:'BHM',name:'Birmingham-Shuttlesworth Intl',city:'Birmingham',country:'USA',flag:'🇺🇸'},
+  {code:'JAX',name:'Jacksonville Intl',city:'Jacksonville',country:'USA',flag:'🇺🇸'},
+  {code:'RSW',name:'Southwest Florida Intl',city:'Fort Myers',country:'USA',flag:'🇺🇸'},
+  {code:'PBI',name:'Palm Beach Intl',city:'West Palm Beach',country:'USA',flag:'🇺🇸'},
+  // EUROPE
+  {code:'LHR',name:'Heathrow',city:'London',country:'UK',flag:'🇬🇧'},
+  {code:'LGW',name:'Gatwick',city:'London',country:'UK',flag:'🇬🇧'},
+  {code:'STN',name:'Stansted',city:'London',country:'UK',flag:'🇬🇧'},
+  {code:'CDG',name:'Charles de Gaulle',city:'Paris',country:'France',flag:'🇫🇷'},
+  {code:'ORY',name:'Orly',city:'Paris',country:'France',flag:'🇫🇷'},
+  {code:'AMS',name:'Schiphol',city:'Amsterdam',country:'Netherlands',flag:'🇳🇱'},
+  {code:'FRA',name:'Frankfurt',city:'Frankfurt',country:'Germany',flag:'🇩🇪'},
+  {code:'MUC',name:'Munich',city:'Munich',country:'Germany',flag:'🇩🇪'},
+  {code:'TXL',name:'Berlin Brandenburg',city:'Berlin',country:'Germany',flag:'🇩🇪'},
+  {code:'MAD',name:'Barajas',city:'Madrid',country:'Spain',flag:'🇪🇸'},
+  {code:'BCN',name:'El Prat',city:'Barcelona',country:'Spain',flag:'🇪🇸'},
+  {code:'FCO',name:'Fiumicino',city:'Rome',country:'Italy',flag:'🇮🇹'},
+  {code:'MXP',name:'Malpensa',city:'Milan',country:'Italy',flag:'🇮🇹'},
+  {code:'VCE',name:'Marco Polo',city:'Venice',country:'Italy',flag:'🇮🇹'},
+  {code:'LIS',name:'Humberto Delgado',city:'Lisbon',country:'Portugal',flag:'🇵🇹'},
+  {code:'OPO',name:'Francisco Sá Carneiro',city:'Porto',country:'Portugal',flag:'🇵🇹'},
+  {code:'ATH',name:'Eleftherios Venizelos',city:'Athens',country:'Greece',flag:'🇬🇷'},
+  {code:'SKG',name:'Thessaloniki Intl',city:'Thessaloniki',country:'Greece',flag:'🇬🇷'},
+  {code:'ZRH',name:'Zurich',city:'Zurich',country:'Switzerland',flag:'🇨🇭'},
+  {code:'VIE',name:'Vienna Intl',city:'Vienna',country:'Austria',flag:'🇦🇹'},
+  {code:'BRU',name:'Brussels',city:'Brussels',country:'Belgium',flag:'🇧🇪'},
+  {code:'CPH',name:'Kastrup',city:'Copenhagen',country:'Denmark',flag:'🇩🇰'},
+  {code:'ARN',name:'Arlanda',city:'Stockholm',country:'Sweden',flag:'🇸🇪'},
+  {code:'OSL',name:'Gardermoen',city:'Oslo',country:'Norway',flag:'🇳🇴'},
+  {code:'HEL',name:'Helsinki-Vantaa',city:'Helsinki',country:'Finland',flag:'🇫🇮'},
+  {code:'WAW',name:'Chopin',city:'Warsaw',country:'Poland',flag:'🇵🇱'},
+  {code:'KRK',name:'John Paul II Intl',city:'Krakow',country:'Poland',flag:'🇵🇱'},
+  {code:'PRG',name:'Václav Havel',city:'Prague',country:'Czechia',flag:'🇨🇿'},
+  {code:'BUD',name:'Liszt Ferenc Intl',city:'Budapest',country:'Hungary',flag:'🇭🇺'},
+  {code:'OTP',name:'Henri Coandă Intl',city:'Bucharest',country:'Romania',flag:'🇷🇴'},
+  {code:'SOF',name:'Sofia Airport',city:'Sofia',country:'Bulgaria',flag:'🇧🇬'},
+  {code:'BEG',name:'Nikola Tesla Intl',city:'Belgrade',country:'Serbia',flag:'🇷🇸'},
+  {code:'ZAG',name:'Zagreb',city:'Zagreb',country:'Croatia',flag:'🇭🇷'},
+  {code:'DBV',name:'Dubrovnik',city:'Dubrovnik',country:'Croatia',flag:'🇭🇷'},
+  {code:'TBS',name:'Tbilisi Intl',city:'Tbilisi',country:'Georgia',flag:'🇬🇪'},
+  {code:'IST',name:'Istanbul',city:'Istanbul',country:'Turkey',flag:'🇹🇷'},
+  {code:'SAW',name:'Sabiha Gökçen',city:'Istanbul',country:'Turkey',flag:'🇹🇷'},
+  {code:'AYT',name:'Antalya',city:'Antalya',country:'Turkey',flag:'🇹🇷'},
+  {code:'RVN',name:'Rovaniemi',city:'Rovaniemi',country:'Finland',flag:'🇫🇮'},
+  {code:'REK',name:'Keflavík Intl',city:'Reykjavik',country:'Iceland',flag:'🇮🇸'},
+  {code:'DUB',name:'Dublin',city:'Dublin',country:'Ireland',flag:'🇮🇪'},
+  {code:'EDI',name:'Edinburgh',city:'Edinburgh',country:'Scotland',flag:'🇬🇧'},
+  {code:'MAN',name:'Manchester',city:'Manchester',country:'UK',flag:'🇬🇧'},
+  {code:'SVQ',name:'San Pablo',city:'Seville',country:'Spain',flag:'🇪🇸'},
+  {code:'AGP',name:'Costa del Sol',city:'Malaga',country:'Spain',flag:'🇪🇸'},
+  {code:'PMI',name:'Palma de Mallorca',city:'Palma',country:'Spain',flag:'🇪🇸'},
+  {code:'TFS',name:'Tenerife South',city:'Tenerife',country:'Spain',flag:'🇪🇸'},
+  {code:'LPA',name:'Gran Canaria',city:'Las Palmas',country:'Spain',flag:'🇪🇸'},
+  {code:'NAP',name:'Capodichino',city:'Naples',country:'Italy',flag:'🇮🇹'},
+  {code:'CTA',name:'Fontanarossa',city:'Catania',country:'Italy',flag:'🇮🇹'},
+  {code:'PMO',name:'Falcone-Borsellino',city:'Palermo',country:'Italy',flag:'🇮🇹'},
+  // ASIA
+  {code:'BKK',name:'Suvarnabhumi',city:'Bangkok',country:'Thailand',flag:'🇹🇭'},
+  {code:'DMK',name:'Don Mueang',city:'Bangkok',country:'Thailand',flag:'🇹🇭'},
+  {code:'HKT',name:'Phuket Intl',city:'Phuket',country:'Thailand',flag:'🇹🇭'},
+  {code:'CNX',name:'Chiang Mai Intl',city:'Chiang Mai',country:'Thailand',flag:'🇹🇭'},
+  {code:'NRT',name:'Narita Intl',city:'Tokyo',country:'Japan',flag:'🇯🇵'},
+  {code:'HND',name:'Haneda',city:'Tokyo',country:'Japan',flag:'🇯🇵'},
+  {code:'KIX',name:'Kansai Intl',city:'Osaka',country:'Japan',flag:'🇯🇵'},
+  {code:'ITM',name:'Itami',city:'Osaka',country:'Japan',flag:'🇯🇵'},
+  {code:'ICN',name:'Incheon Intl',city:'Seoul',country:'South Korea',flag:'🇰🇷'},
+  {code:'GMP',name:'Gimpo Intl',city:'Seoul',country:'South Korea',flag:'🇰🇷'},
+  {code:'PEK',name:'Capital Intl',city:'Beijing',country:'China',flag:'🇨🇳'},
+  {code:'PKX',name:'Daxing Intl',city:'Beijing',country:'China',flag:'🇨🇳'},
+  {code:'PVG',name:'Pudong Intl',city:'Shanghai',country:'China',flag:'🇨🇳'},
+  {code:'SHA',name:'Hongqiao',city:'Shanghai',country:'China',flag:'🇨🇳'},
+  {code:'HKG',name:'Hong Kong Intl',city:'Hong Kong',country:'China',flag:'🇭🇰'},
+  {code:'SIN',name:'Changi',city:'Singapore',country:'Singapore',flag:'🇸🇬'},
+  {code:'DPS',name:'Ngurah Rai Intl',city:'Bali',country:'Indonesia',flag:'🇮🇩'},
+  {code:'CGK',name:'Soekarno-Hatta Intl',city:'Jakarta',country:'Indonesia',flag:'🇮🇩'},
+  {code:'SUB',name:'Juanda Intl',city:'Surabaya',country:'Indonesia',flag:'🇮🇩'},
+  {code:'HAN',name:'Noi Bai Intl',city:'Hanoi',country:'Vietnam',flag:'🇻🇳'},
+  {code:'SGN',name:'Tan Son Nhat Intl',city:'Ho Chi Minh City',country:'Vietnam',flag:'🇻🇳'},
+  {code:'DAD',name:'Da Nang Intl',city:'Da Nang',country:'Vietnam',flag:'🇻🇳'},
+  {code:'KUL',name:'Kuala Lumpur Intl',city:'Kuala Lumpur',country:'Malaysia',flag:'🇲🇾'},
+  {code:'MNL',name:'Ninoy Aquino Intl',city:'Manila',country:'Philippines',flag:'🇵🇭'},
+  {code:'CEB',name:'Mactan-Cebu Intl',city:'Cebu',country:'Philippines',flag:'🇵🇭'},
+  {code:'DEL',name:'Indira Gandhi Intl',city:'Delhi',country:'India',flag:'🇮🇳'},
+  {code:'BOM',name:'Chhatrapati Shivaji',city:'Mumbai',country:'India',flag:'🇮🇳'},
+  {code:'BLR',name:'Kempegowda Intl',city:'Bangalore',country:'India',flag:'🇮🇳'},
+  {code:'MAA',name:'Chennai Intl',city:'Chennai',country:'India',flag:'🇮🇳'},
+  {code:'CCU',name:'Netaji Subhas Chandra Bose',city:'Kolkata',country:'India',flag:'🇮🇳'},
+  {code:'COK',name:'Cochin Intl',city:'Kochi',country:'India',flag:'🇮🇳'},
+  {code:'DAC',name:'Hazrat Shahjalal Intl',city:'Dhaka',country:'Bangladesh',flag:'🇧🇩'},
+  {code:'CMB',name:'Bandaranaike Intl',city:'Colombo',country:'Sri Lanka',flag:'🇱🇰'},
+  {code:'KTM',name:'Tribhuvan Intl',city:'Kathmandu',country:'Nepal',flag:'🇳🇵'},
+  {code:'RGN',name:'Yangon Intl',city:'Yangon',country:'Myanmar',flag:'🇲🇲'},
+  {code:'PNH',name:'Phnom Penh Intl',city:'Phnom Penh',country:'Cambodia',flag:'🇰🇭'},
+  {code:'REP',name:'Siem Reap Intl',city:'Siem Reap',country:'Cambodia',flag:'🇰🇭'},
+  {code:'VTE',name:'Wattay Intl',city:'Vientiane',country:'Laos',flag:'🇱🇦'},
+  {code:'ULN',name:'Chinggis Khaan Intl',city:'Ulaanbaatar',country:'Mongolia',flag:'🇲🇳'},
+  {code:'DXB',name:'Dubai Intl',city:'Dubai',country:'UAE',flag:'🇦🇪'},
+  {code:'AUH',name:'Abu Dhabi Intl',city:'Abu Dhabi',country:'UAE',flag:'🇦🇪'},
+  {code:'DOH',name:'Hamad Intl',city:'Doha',country:'Qatar',flag:'🇶🇦'},
+  {code:'BAH',name:'Bahrain Intl',city:'Manama',country:'Bahrain',flag:'🇧🇭'},
+  {code:'KWI',name:'Kuwait Intl',city:'Kuwait City',country:'Kuwait',flag:'🇰🇼'},
+  {code:'AMM',name:'Queen Alia Intl',city:'Amman',country:'Jordan',flag:'🇯🇴'},
+  {code:'BEY',name:'Rafic Hariri Intl',city:'Beirut',country:'Lebanon',flag:'🇱🇧'},
+  {code:'TLV',name:'Ben Gurion',city:'Tel Aviv',country:'Israel',flag:'🇮🇱'},
+  {code:'TBS',name:'Tbilisi Intl',city:'Tbilisi',country:'Georgia',flag:'🇬🇪'},
+  {code:'EVN',name:'Zvartnots Intl',city:'Yerevan',country:'Armenia',flag:'🇦🇲'},
+  {code:'GYD',name:'Heydar Aliyev Intl',city:'Baku',country:'Azerbaijan',flag:'🇦🇿'},
+  {code:'TAS',name:'Islam Karimov Intl',city:'Tashkent',country:'Uzbekistan',flag:'🇺🇿'},
+  {code:'ALA',name:'Almaty Intl',city:'Almaty',country:'Kazakhstan',flag:'🇰🇿'},
+  // AFRICA
+  {code:'CAI',name:'Cairo Intl',city:'Cairo',country:'Egypt',flag:'🇪🇬'},
+  {code:'LXR',name:'Luxor Intl',city:'Luxor',country:'Egypt',flag:'🇪🇬'},
+  {code:'HRG',name:'Hurghada Intl',city:'Hurghada',country:'Egypt',flag:'🇪🇬'},
+  {code:'CMN',name:'Mohammed V Intl',city:'Casablanca',country:'Morocco',flag:'🇲🇦'},
+  {code:'RAK',name:'Marrakech Menara',city:'Marrakech',country:'Morocco',flag:'🇲🇦'},
+  {code:'FEZ',name:'Fes-Saïs',city:'Fes',country:'Morocco',flag:'🇲🇦'},
+  {code:'TNG',name:'Ibn Batouta',city:'Tangier',country:'Morocco',flag:'🇲🇦'},
+  {code:'TUN',name:'Carthage Intl',city:'Tunis',country:'Tunisia',flag:'🇹🇳'},
+  {code:'ALG',name:'Houari Boumediene',city:'Algiers',country:'Algeria',flag:'🇩🇿'},
+  {code:'TIP',name:'Mitiga Intl',city:'Tripoli',country:'Libya',flag:'🇱🇾'},
+  {code:'ADD',name:'Bole Intl',city:'Addis Ababa',country:'Ethiopia',flag:'🇪🇹'},
+  {code:'NBO',name:'Jomo Kenyatta Intl',city:'Nairobi',country:'Kenya',flag:'🇰🇪'},
+  {code:'MBA',name:'Moi Intl',city:'Mombasa',country:'Kenya',flag:'🇰🇪'},
+  {code:'DAR',name:'Julius Nyerere Intl',city:'Dar es Salaam',country:'Tanzania',flag:'🇹🇿'},
+  {code:'JRO',name:'Kilimanjaro Intl',city:'Kilimanjaro',country:'Tanzania',flag:'🇹🇿'},
+  {code:'ZNZ',name:'Abeid Amani Karume',city:'Zanzibar',country:'Tanzania',flag:'🇹🇿'},
+  {code:'EBB',name:'Entebbe Intl',city:'Kampala',country:'Uganda',flag:'🇺🇬'},
+  {code:'KGL',name:'Kigali Intl',city:'Kigali',country:'Rwanda',flag:'🇷🇼'},
+  {code:'LUN',name:'Kenneth Kaunda Intl',city:'Lusaka',country:'Zambia',flag:'🇿🇲'},
+  {code:'VFA',name:'Victoria Falls',city:'Victoria Falls',country:'Zimbabwe',flag:'🇿🇼'},
+  {code:'HRE',name:'Robert Gabriel Mugabe',city:'Harare',country:'Zimbabwe',flag:'🇿🇼'},
+  {code:'JNB',name:'O.R. Tambo Intl',city:'Johannesburg',country:'South Africa',flag:'🇿🇦'},
+  {code:'CPT',name:'Cape Town Intl',city:'Cape Town',country:'South Africa',flag:'🇿🇦'},
+  {code:'DUR',name:'King Shaka Intl',city:'Durban',country:'South Africa',flag:'🇿🇦'},
+  {code:'LAD',name:'Quatro de Fevereiro',city:'Luanda',country:'Angola',flag:'🇦🇴'},
+  {code:'LOS',name:'Murtala Muhammed',city:'Lagos',country:'Nigeria',flag:'🇳🇬'},
+  {code:'ABV',name:'Nnamdi Azikiwe Intl',city:'Abuja',country:'Nigeria',flag:'🇳🇬'},
+  {code:'ACC',name:'Kotoka Intl',city:'Accra',country:'Ghana',flag:'🇬🇭'},
+  {code:'ABJ',name:'Félix-Houphouët-Boigny',city:"Abidjan",country:"Ivory Coast",flag:'🇨🇮'},
+  {code:'DKR',name:'Blaise Diagne Intl',city:'Dakar',country:'Senegal',flag:'🇸🇳'},
+  {code:'TNR',name:'Ivato Intl',city:'Antananarivo',country:'Madagascar',flag:'🇲🇬'},
+  {code:'MRU',name:'Sir Seewoosagur Ramgoolam',city:'Port Louis',country:'Mauritius',flag:'🇲🇺'},
+  {code:'SEZ',name:'Seychelles Intl',city:'Mahé',country:'Seychelles',flag:'🇸🇨'},
+  // LATIN AMERICA
+  {code:'GRU',name:'Guarulhos Intl',city:'São Paulo',country:'Brazil',flag:'🇧🇷'},
+  {code:'GIG',name:'Galeão Intl',city:'Rio de Janeiro',country:'Brazil',flag:'🇧🇷'},
+  {code:'BSB',name:'Presidente Juscelino Kubitschek',city:'Brasília',country:'Brazil',flag:'🇧🇷'},
+  {code:'SSA',name:'Deputado Luís Eduardo Magalhães',city:'Salvador',country:'Brazil',flag:'🇧🇷'},
+  {code:'FOR',name:'Pinto Martins Intl',city:'Fortaleza',country:'Brazil',flag:'🇧🇷'},
+  {code:'REC',name:'Guararapes-Gilberto Freyre',city:'Recife',country:'Brazil',flag:'🇧🇷'},
+  {code:'EZE',name:'Ministro Pistarini',city:'Buenos Aires',country:'Argentina',flag:'🇦🇷'},
+  {code:'AEP',name:'Jorge Newbery',city:'Buenos Aires',country:'Argentina',flag:'🇦🇷'},
+  {code:'SCL',name:'Arturo Merino Benítez',city:'Santiago',country:'Chile',flag:'🇨🇱'},
+  {code:'BOG',name:'El Dorado Intl',city:'Bogotá',country:'Colombia',flag:'🇨🇴'},
+  {code:'MDE',name:'José María Córdova',city:'Medellín',country:'Colombia',flag:'🇨🇴'},
+  {code:'CTG',name:'Rafael Núñez Intl',city:'Cartagena',country:'Colombia',flag:'🇨🇴'},
+  {code:'LIM',name:'Jorge Chávez Intl',city:'Lima',country:'Peru',flag:'🇵🇪'},
+  {code:'CUZ',name:'Alejandro Velasco Astete',city:'Cusco',country:'Peru',flag:'🇵🇪'},
+  {code:'UIO',name:'Mariscal Sucre Intl',city:'Quito',country:'Ecuador',flag:'🇪🇨'},
+  {code:'GYE',name:'José Joaquín de Olmedo',city:'Guayaquil',country:'Ecuador',flag:'🇪🇨'},
+  {code:'GPS',name:'Seymour Airport',city:'Galápagos Islands',country:'Ecuador',flag:'🇪🇨'},
+  {code:'VVI',name:'Viru Viru Intl',city:'Santa Cruz',country:'Bolivia',flag:'🇧🇴'},
+  {code:'LPB',name:'El Alto Intl',city:'La Paz',country:'Bolivia',flag:'🇧🇴'},
+  {code:'ASU',name:'Silvio Pettirossi Intl',city:'Asunción',country:'Paraguay',flag:'🇵🇾'},
+  {code:'MVD',name:'Carrasco Intl',city:'Montevideo',country:'Uruguay',flag:'🇺🇾'},
+  {code:'MEX',name:'Benito Juárez Intl',city:'Mexico City',country:'Mexico',flag:'🇲🇽'},
+  {code:'CUN',name:'Cancún Intl',city:'Cancún',country:'Mexico',flag:'🇲🇽'},
+  {code:'GDL',name:'Don Miguel Hidalgo y Costilla',city:'Guadalajara',country:'Mexico',flag:'🇲🇽'},
+  {code:'MTY',name:'General Mariano Escobedo',city:'Monterrey',country:'Mexico',flag:'🇲🇽'},
+  {code:'PVR',name:'Licenciado Gustavo Díaz Ordaz',city:'Puerto Vallarta',country:'Mexico',flag:'🇲🇽'},
+  {code:'SJD',name:'Los Cabos Intl',city:'Los Cabos',country:'Mexico',flag:'🇲🇽'},
+  {code:'HAV',name:'José Martí Intl',city:'Havana',country:'Cuba',flag:'🇨🇺'},
+  {code:'SDQ',name:'Las Américas Intl',city:'Santo Domingo',country:'Dominican Republic',flag:'🇩🇴'},
+  {code:'PUJ',name:'Punta Cana Intl',city:'Punta Cana',country:'Dominican Republic',flag:'🇩🇴'},
+  {code:'SJU',name:'Luis Muñoz Marín Intl',city:'San Juan',country:'Puerto Rico',flag:'🇵🇷'},
+  {code:'GUA',name:'La Aurora Intl',city:'Guatemala City',country:'Guatemala',flag:'🇬🇹'},
+  {code:'SAP',name:'Ramón Villeda Morales',city:'San Pedro Sula',country:'Honduras',flag:'🇭🇳'},
+  {code:'SAL',name:'Monseñor Óscar Arnulfo Romero',city:'San Salvador',country:'El Salvador',flag:'🇸🇻'},
+  {code:'MGA',name:'Augusto C. Sandino',city:'Managua',country:'Nicaragua',flag:'🇳🇮'},
+  {code:'SJO',name:'Juan Santamaría Intl',city:'San José',country:'Costa Rica',flag:'🇨🇷'},
+  {code:'PTY',name:'Tocumen Intl',city:'Panama City',country:'Panama',flag:'🇵🇦'},
+  {code:'CCS',name:'Simón Bolívar Intl',city:'Caracas',country:'Venezuela',flag:'🇻🇪'},
+  {code:'GEO',name:'Cheddi Jagan Intl',city:'Georgetown',country:'Guyana',flag:'🇬🇾'},
+  // CARIBBEAN
+  {code:'NAS',name:'Lynden Pindling Intl',city:'Nassau',country:'Bahamas',flag:'🇧🇸'},
+  {code:'MBJ',name:'Sangster Intl',city:'Montego Bay',country:'Jamaica',flag:'🇯🇲'},
+  {code:'KIN',name:'Norman Manley Intl',city:'Kingston',country:'Jamaica',flag:'🇯🇲'},
+  {code:'POS',name:'Piarco Intl',city:'Port of Spain',country:'Trinidad & Tobago',flag:'🇹🇹'},
+  {code:'ANU',name:'V.C. Bird Intl',city:'Antigua',country:'Antigua & Barbuda',flag:'🇦🇬'},
+  {code:'BGI',name:'Grantley Adams Intl',city:'Bridgetown',country:'Barbados',flag:'🇧🇧'},
+  {code:'SXM',name:'Princess Juliana Intl',city:'Sint Maarten',country:'Sint Maarten',flag:'🇸🇽'},
+  {code:'AXA',name:'Clayton J. Lloyd Intl',city:'Anguilla',country:'Anguilla',flag:'🇦🇮'},
+  {code:'SKB',name:'Robert L. Bradshaw Intl',city:'Basseterre',country:'St. Kitts & Nevis',flag:'🇰🇳'},
+  {code:'SVD',name:'Argyle Intl',city:'Kingstown',country:'St. Vincent',flag:'🇻🇨'},
+  {code:'GND',name:'Maurice Bishop Intl',city:"St. George's",country:'Grenada',flag:'🇬🇩'},
+  {code:'CUR',name:'Hato Intl',city:'Willemstad',country:'Curaçao',flag:'🇨🇼'},
+  {code:'BON',name:'Flamingo Intl',city:'Kralendijk',country:'Bonaire',flag:'🇧🇶'},
+  {code:'AUA',name:'Queen Beatrix Intl',city:'Oranjestad',country:'Aruba',flag:'🇦🇼'},
+  {code:'STT',name:'Cyril E. King Airport',city:'St. Thomas',country:'US Virgin Islands',flag:'🇻🇮'},
+  {code:'STX',name:'Henry E. Rohlsen',city:'St. Croix',country:'US Virgin Islands',flag:'🇻🇮'},
+  // PACIFIC & OCEANIA
+  {code:'SYD',name:'Kingsford Smith',city:'Sydney',country:'Australia',flag:'🇦🇺'},
+  {code:'MEL',name:'Tullamarine',city:'Melbourne',country:'Australia',flag:'🇦🇺'},
+  {code:'BNE',name:'Brisbane',city:'Brisbane',country:'Australia',flag:'🇦🇺'},
+  {code:'PER',name:'Perth',city:'Perth',country:'Australia',flag:'🇦🇺'},
+  {code:'ADL',name:'Adelaide',city:'Adelaide',country:'Australia',flag:'🇦🇺'},
+  {code:'CNS',name:'Cairns',city:'Cairns',country:'Australia',flag:'🇦🇺'},
+  {code:'AKL',name:'Auckland',city:'Auckland',country:'New Zealand',flag:'🇳🇿'},
+  {code:'CHC',name:'Christchurch',city:'Christchurch',country:'New Zealand',flag:'🇳🇿'},
+  {code:'WLG',name:'Wellington',city:'Wellington',country:'New Zealand',flag:'🇳🇿'},
+  {code:'NAN',name:'Nadi Intl',city:'Nadi',country:'Fiji',flag:'🇫🇯'},
+  {code:'PPT',name:'Faa\'a Intl',city:'Papeete',country:'French Polynesia',flag:'🇵🇫'},
+  {code:'INU',name:'Nauru Intl',city:'Nauru',country:'Nauru',flag:'🇳🇷'},
+  {code:'HIR',name:'Honiara Intl',city:'Honiara',country:'Solomon Islands',flag:'🇸🇧'},
+  {code:'VLI',name:'Bauerfield',city:'Port Vila',country:'Vanuatu',flag:'🇻🇺'},
+  {code:'GUM',name:'Antonio B. Won Pat Intl',city:'Hagåtña',country:'Guam',flag:'🇬🇺'},
+  {code:'MHX',name:'Marchena Airport',city:'Galapagos',country:'Ecuador',flag:'🇪🇨'},
+  {code:'RAR',name:'Rarotonga Intl',city:'Avarua',country:'Cook Islands',flag:'🇨🇰'},
+  {code:'TBU',name:"Fua'amotu Intl",city:"Nuku'alofa",country:'Tonga',flag:'🇹🇴'},
+  {code:'APW',name:'Faleolo Intl',city:'Apia',country:'Samoa',flag:'🇼🇸'},
+  {code:'MRE',name:'Mara Serena Airport',city:'Maasai Mara',country:'Kenya',flag:'🇰🇪'},
+];
+
+// ════ WORLD DESTINATIONS (Cities, Islands, Countries) ════
+const WORLD_DESTINATIONS = [
+  // ASIA - Cities
+  {name:'Bangkok',country:'Thailand',flag:'🇹🇭',type:'city',code:'BKK',daily:35,flight:580,region:'asia',tags:'temples street food budget backpacker'},
+  {name:'Bali',country:'Indonesia',flag:'🇮🇩',type:'island',code:'DPS',daily:40,flight:700,region:'asia',tags:'beach surf yoga rice fields'},
+  {name:'Tokyo',country:'Japan',flag:'🇯🇵',type:'city',code:'NRT',daily:70,flight:820,region:'asia',tags:'anime food culture modern'},
+  {name:'Osaka',country:'Japan',flag:'🇯🇵',type:'city',code:'KIX',daily:65,flight:810,region:'asia',tags:'food street eat castle'},
+  {name:'Kyoto',country:'Japan',flag:'🇯🇵',type:'city',code:'KIX',daily:60,flight:810,region:'asia',tags:'temples geisha bamboo'},
+  {name:'Hanoi',country:'Vietnam',flag:'🇻🇳',type:'city',code:'HAN',daily:30,flight:620,region:'asia',tags:'pho old quarter budget history'},
+  {name:'Ho Chi Minh City',country:'Vietnam',flag:'🇻🇳',type:'city',code:'SGN',daily:32,flight:630,region:'asia',tags:'saigon street food bustling'},
+  {name:'Da Nang',country:'Vietnam',flag:'🇻🇳',type:'city',code:'DAD',daily:28,flight:640,region:'asia',tags:'beach marble mountains budget'},
+  {name:'Hội An',country:'Vietnam',flag:'🇻🇳',type:'city',code:'DAD',daily:30,flight:640,region:'asia',tags:'lanterns historic old town'},
+  {name:'Phuket',country:'Thailand',flag:'🇹🇭',type:'island',code:'HKT',daily:45,flight:600,region:'asia',tags:'beach party resort island'},
+  {name:'Chiang Mai',country:'Thailand',flag:'🇹🇭',type:'city',code:'CNX',daily:28,flight:590,region:'asia',tags:'temples elephants mountains north'},
+  {name:'Koh Samui',country:'Thailand',flag:'🇹🇭',type:'island',code:'BKK',daily:40,flight:600,region:'asia',tags:'beach island tropical resort'},
+  {name:'Singapore',country:'Singapore',flag:'🇸🇬',type:'city',code:'SIN',daily:80,flight:750,region:'asia',tags:'luxury modern food hawker clean'},
+  {name:'Kuala Lumpur',country:'Malaysia',flag:'🇲🇾',type:'city',code:'KUL',daily:40,flight:680,region:'asia',tags:'petronas towers budget food'},
+  {name:'Langkawi',country:'Malaysia',flag:'🇲🇾',type:'island',code:'LGK',daily:45,flight:700,region:'asia',tags:'beach duty free island rainforest'},
+  {name:'Penang',country:'Malaysia',flag:'🇲🇾',type:'city',code:'PEN',daily:35,flight:690,region:'asia',tags:'street food george town heritage'},
+  {name:'Tbilisi',country:'Georgia',flag:'🇬🇪',type:'city',code:'TBS',daily:28,flight:680,region:'asia',tags:'wine mountains old town budget europe'},
+  {name:'Seoul',country:'South Korea',flag:'🇰🇷',type:'city',code:'ICN',daily:65,flight:780,region:'asia',tags:'kpop food palaces shopping'},
+  {name:'Jeju Island',country:'South Korea',flag:'🇰🇷',type:'island',code:'CJU',daily:55,flight:800,region:'asia',tags:'volcanic island beaches hiking'},
+  {name:'Phnom Penh',country:'Cambodia',flag:'🇰🇭',type:'city',code:'PNH',daily:30,flight:650,region:'asia',tags:'history khmer angkor budget'},
+  {name:'Siem Reap',country:'Cambodia',flag:'🇰🇭',type:'city',code:'REP',daily:30,flight:660,region:'asia',tags:'angkor wat temples ancient'},
+  {name:'Luang Prabang',country:'Laos',flag:'🇱🇦',type:'city',code:'VTE',daily:35,flight:680,region:'asia',tags:'monks mekong waterfalls slow travel'},
+  {name:'Kathmandu',country:'Nepal',flag:'🇳🇵',type:'city',code:'KTM',daily:30,flight:700,region:'asia',tags:'everest trekking himalayas budget'},
+  {name:'Pokhara',country:'Nepal',flag:'🇳🇵',type:'city',code:'KTM',daily:28,flight:710,region:'asia',tags:'annapurna trekking lakes mountains'},
+  {name:'Colombo',country:'Sri Lanka',flag:'🇱🇰',type:'city',code:'CMB',daily:35,flight:720,region:'asia',tags:'colonial beaches curry budget'},
+  {name:'Galle',country:'Sri Lanka',flag:'🇱🇰',type:'city',code:'CMB',daily:38,flight:720,region:'asia',tags:'fort beach surf historic'},
+  {name:'Manila',country:'Philippines',flag:'🇵🇭',type:'city',code:'MNL',daily:35,flight:700,region:'asia',tags:'islands beaches history food'},
+  {name:'Palawan',country:'Philippines',flag:'🇵🇭',type:'island',code:'PPS',daily:40,flight:720,region:'asia',tags:'paradise beach budget island diving'},
+  {name:'Boracay',country:'Philippines',flag:'🇵🇭',type:'island',code:'MPH',daily:45,flight:720,region:'asia',tags:'white beach party island resort'},
+  {name:'Bohol',country:'Philippines',flag:'🇵🇭',type:'island',code:'TAG',daily:38,flight:710,region:'asia',tags:'chocolate hills diving tarsier'},
+  {name:'Cebu',country:'Philippines',flag:'🇵🇭',type:'city',code:'CEB',daily:35,flight:700,region:'asia',tags:'diving whaleshark beach island'},
+  {name:'Delhi',country:'India',flag:'🇮🇳',type:'city',code:'DEL',daily:30,flight:750,region:'asia',tags:'old delhi spices history budget'},
+  {name:'Mumbai',country:'India',flag:'🇮🇳',type:'city',code:'BOM',daily:35,flight:770,region:'asia',tags:'bollywood gateway slums culture'},
+  {name:'Jaipur',country:'India',flag:'🇮🇳',type:'city',code:'JAI',daily:25,flight:760,region:'asia',tags:'pink city palaces rajasthan budget'},
+  {name:'Goa',country:'India',flag:'🇮🇳',type:'city',code:'GOI',daily:35,flight:760,region:'asia',tags:'beach party hippie budget'},
+  {name:'Varanasi',country:'India',flag:'🇮🇳',type:'city',code:'VNS',daily:25,flight:760,region:'asia',tags:'ganges spiritual ghats ancient'},
+  {name:'Udaipur',country:'India',flag:'🇮🇳',type:'city',code:'UDR',daily:28,flight:760,region:'asia',tags:'lake city romantic palaces rajasthan'},
+  {name:'Agra',country:'India',flag:'🇮🇳',type:'city',code:'DEL',daily:28,flight:750,region:'asia',tags:'taj mahal mughal history'},
+  {name:'Maldives',country:'Maldives',flag:'🇲🇻',type:'island',code:'MLE',daily:150,flight:900,region:'asia',tags:'overwater bungalow luxury diving crystal'},
+  {name:'Dubai',country:'UAE',flag:'🇦🇪',type:'city',code:'DXB',daily:100,flight:750,region:'asia',tags:'luxury modern desert shopping'},
+  {name:'Abu Dhabi',country:'UAE',flag:'🇦🇪',type:'city',code:'AUH',daily:90,flight:760,region:'asia',tags:'grand mosque formula 1 luxury'},
+  {name:'Istanbul',country:'Turkey',flag:'🇹🇷',type:'city',code:'IST',daily:45,flight:600,region:'asia',tags:'europe asia bridge bazaar hagia sophia'},
+  {name:'Cappadocia',country:'Turkey',flag:'🇹🇷',type:'city',code:'ASR',daily:50,flight:620,region:'asia',tags:'hot air balloon cave hotels fairy chimneys'},
+  {name:'Antalya',country:'Turkey',flag:'🇹🇷',type:'city',code:'AYT',daily:45,flight:600,region:'asia',tags:'beach mediterranean resort turquoise'},
+  {name:'Almaty',country:'Kazakhstan',flag:'🇰🇿',type:'city',code:'ALA',daily:35,flight:850,region:'asia',tags:'mountains steppe silk road adventure'},
+  {name:'Tashkent',country:'Uzbekistan',flag:'🇺🇿',type:'city',code:'TAS',daily:30,flight:870,region:'asia',tags:'silk road samarkand architecture'},
+  {name:'Samarkand',country:'Uzbekistan',flag:'🇺🇿',type:'city',code:'SKD',daily:30,flight:870,region:'asia',tags:'registan silk road ancient mosaics'},
+  {name:'Ulaanbaatar',country:'Mongolia',flag:'🇲🇳',type:'city',code:'ULN',daily:35,flight:900,region:'asia',tags:'nomad gobi desert horse steppes'},
+  // EUROPE - Cities
+  {name:'Lisbon',country:'Portugal',flag:'🇵🇹',type:'city',code:'LIS',daily:60,flight:480,region:'europe',tags:'trams pastel de nata fado cheap wine'},
+  {name:'Porto',country:'Portugal',flag:'🇵🇹',type:'city',code:'OPO',daily:55,flight:490,region:'europe',tags:'wine azulejos river douro budget'},
+  {name:'Budapest',country:'Hungary',flag:'🇭🇺',type:'city',code:'BUD',daily:45,flight:520,region:'europe',tags:'thermal baths ruin bars cheap beer'},
+  {name:'Prague',country:'Czechia',flag:'🇨🇿',type:'city',code:'PRG',daily:50,flight:510,region:'europe',tags:'castle charles bridge beer cheap'},
+  {name:'Krakow',country:'Poland',flag:'🇵🇱',type:'city',code:'KRK',daily:40,flight:500,region:'europe',tags:'old town budget history auschwitz'},
+  {name:'Warsaw',country:'Poland',flag:'🇵🇱',type:'city',code:'WAW',daily:45,flight:510,region:'europe',tags:'history reconstruction budget modern'},
+  {name:'Seville',country:'Spain',flag:'🇪🇸',type:'city',code:'SVQ',daily:55,flight:540,region:'europe',tags:'flamenco tapas gothic budget south'},
+  {name:'Barcelona',country:'Spain',flag:'🇪🇸',type:'city',code:'BCN',daily:80,flight:550,region:'europe',tags:'gaudi beach sagrada familia nightlife'},
+  {name:'Madrid',country:'Spain',flag:'🇪🇸',type:'city',code:'MAD',daily:75,flight:540,region:'europe',tags:'prado museum tapas art gallery'},
+  {name:'Valencia',country:'Spain',flag:'🇪🇸',type:'city',code:'VLC',daily:60,flight:530,region:'europe',tags:'paella city of arts beach budget'},
+  {name:'Granada',country:'Spain',flag:'🇪🇸',type:'city',code:'GRX',daily:50,flight:540,region:'europe',tags:'alhambra tapas free flamenco'},
+  {name:'Mallorca',country:'Spain',flag:'🇪🇸',type:'island',code:'PMI',daily:70,flight:550,region:'europe',tags:'beach island mediterranean summer'},
+  {name:'Ibiza',country:'Spain',flag:'🇪🇸',type:'island',code:'IBZ',daily:90,flight:560,region:'europe',tags:'clubbing party beach summer island'},
+  {name:'Tenerife',country:'Spain',flag:'🇪🇸',type:'island',code:'TFS',daily:65,flight:550,region:'europe',tags:'canary islands volcano beach winter sun'},
+  {name:'Gran Canaria',country:'Spain',flag:'🇪🇸',type:'island',code:'LPA',daily:60,flight:540,region:'europe',tags:'canary islands beach dunes winter sun'},
+  {name:'Lanzarote',country:'Spain',flag:'🇪🇸',type:'island',code:'ACE',daily:60,flight:540,region:'europe',tags:'canary islands volcanic beach sun'},
+  {name:'Rome',country:'Italy',flag:'🇮🇹',type:'city',code:'FCO',daily:80,flight:530,region:'europe',tags:'colosseum vatican history pasta pizza'},
+  {name:'Florence',country:'Italy',flag:'🇮🇹',type:'city',code:'FLR',daily:75,flight:530,region:'europe',tags:'renaissance art uffizi tuscany'},
+  {name:'Venice',country:'Italy',flag:'🇮🇹',type:'city',code:'VCE',daily:90,flight:530,region:'europe',tags:'canals gondola romantic expensive'},
+  {name:'Naples',country:'Italy',flag:'🇮🇹',type:'city',code:'NAP',daily:55,flight:530,region:'europe',tags:'pizza amalfi pompeii budget south'},
+  {name:'Sicily',country:'Italy',flag:'🇮🇹',type:'island',code:'CTA',daily:55,flight:540,region:'europe',tags:'island volcano food history budget'},
+  {name:'Sardinia',country:'Italy',flag:'🇮🇹',type:'island',code:'CAG',daily:60,flight:540,region:'europe',tags:'beach island crystal water italy'},
+  {name:'Cinque Terre',country:'Italy',flag:'🇮🇹',type:'city',code:'FCO',daily:85,flight:530,region:'europe',tags:'coastal villages hiking pastel cliff'},
+  {name:'Paris',country:'France',flag:'🇫🇷',type:'city',code:'CDG',daily:100,flight:490,region:'europe',tags:'eiffel tower art fashion food romantic'},
+  {name:'Nice',country:'France',flag:'🇫🇷',type:'city',code:'NCE',daily:85,flight:500,region:'europe',tags:'riviera beach promenade monaco'},
+  {name:'Lyon',country:'France',flag:'🇫🇷',type:'city',code:'LYS',daily:75,flight:495,region:'europe',tags:'food capital silk history budget paris'},
+  {name:'Marseille',country:'France',flag:'🇫🇷',type:'city',code:'MRS',daily:75,flight:495,region:'europe',tags:'port calanques bouillabaisse south'},
+  {name:'Amsterdam',country:'Netherlands',flag:'🇳🇱',type:'city',code:'AMS',daily:90,flight:490,region:'europe',tags:'canals bikes tulips museums'},
+  {name:'Berlin',country:'Germany',flag:'🇩🇪',type:'city',code:'TXL',daily:75,flight:500,region:'europe',tags:'history clubs art nightlife budget'},
+  {name:'Munich',country:'Germany',flag:'🇩🇪',type:'city',code:'MUC',daily:90,flight:510,region:'europe',tags:'oktoberfest bavarian alps beer halls'},
+  {name:'Hamburg',country:'Germany',flag:'🇩🇪',type:'city',code:'HAM',daily:80,flight:505,region:'europe',tags:'port reeperbahn beatles harbor city'},
+  {name:'Vienna',country:'Austria',flag:'🇦🇹',type:'city',code:'VIE',daily:85,flight:530,region:'europe',tags:'music palaces coffee history museums'},
+  {name:'Athens',country:'Greece',flag:'🇬🇷',type:'city',code:'ATH',daily:65,flight:540,region:'europe',tags:'acropolis ancient history budget food'},
+  {name:'Santorini',country:'Greece',flag:'🇬🇷',type:'island',code:'JTR',daily:120,flight:560,region:'europe',tags:'blue domes sunset caldera romantic'},
+  {name:'Mykonos',country:'Greece',flag:'🇬🇷',type:'island',code:'JMK',daily:130,flight:560,region:'europe',tags:'party beach windmills gay friendly'},
+  {name:'Crete',country:'Greece',flag:'🇬🇷',type:'island',code:'HER',daily:70,flight:550,region:'europe',tags:'largest greek island beach history'},
+  {name:'Corfu',country:'Greece',flag:'🇬🇷',type:'island',code:'CFU',daily:65,flight:550,region:'europe',tags:'green island venetian old town beach'},
+  {name:'Rhodes',country:'Greece',flag:'🇬🇷',type:'island',code:'RHO',daily:65,flight:550,region:'europe',tags:'medieval old city beach history'},
+  {name:'Zakynthos',country:'Greece',flag:'🇬🇷',type:'island',code:'ZTH',daily:65,flight:550,region:'europe',tags:'turtle beach shipwreck lagoon'},
+  {name:'Dubrovnik',country:'Croatia',flag:'🇭🇷',type:'city',code:'DBV',daily:80,flight:560,region:'europe',tags:'game of thrones walls adriatic sea'},
+  {name:'Split',country:'Croatia',flag:'🇭🇷',type:'city',code:'SPU',daily:65,flight:545,region:'europe',tags:'diocletian palace adriatic budget'},
+  {name:'Hvar',country:'Croatia',flag:'🇭🇷',type:'island',code:'SPU',daily:70,flight:550,region:'europe',tags:'island party lavender adriatic'},
+  {name:'Kotor',country:'Montenegro',flag:'🇲🇪',type:'city',code:'TGD',daily:45,flight:540,region:'europe',tags:'bay fjord medieval budget adriatic'},
+  {name:'Budva',country:'Montenegro',flag:'🇲🇪',type:'city',code:'TGD',daily:45,flight:540,region:'europe',tags:'beach old town adriatic budget'},
+  {name:'Tirana',country:'Albania',flag:'🇦🇱',type:'city',code:'TIA',daily:35,flight:530,region:'europe',tags:'cheapest europe budget emerging'},
+  {name:'Sarajevo',country:'Bosnia',flag:'🇧🇦',type:'city',code:'SJJ',daily:35,flight:530,region:'europe',tags:'history war budget ottoman bazaar'},
+  {name:'Belgrade',country:'Serbia',flag:'🇷🇸',type:'city',code:'BEG',daily:35,flight:525,region:'europe',tags:'nightlife danube budget balkan'},
+  {name:'Sofia',country:'Bulgaria',flag:'🇧🇬',type:'city',code:'SOF',daily:35,flight:520,region:'europe',tags:'budget eastern europe mountains rose'},
+  {name:'Bucharest',country:'Romania',flag:'🇷🇴',type:'city',code:'OTP',daily:35,flight:525,region:'europe',tags:'budget nightlife parliament palace'},
+  {name:'Cluj-Napoca',country:'Romania',flag:'🇷🇴',type:'city',code:'CLJ',daily:30,flight:520,region:'europe',tags:'transylvania budget student city'},
+  {name:'Tallinn',country:'Estonia',flag:'🇪🇪',type:'city',code:'TLL',daily:55,flight:550,region:'europe',tags:'medieval old town digital nomad'},
+  {name:'Riga',country:'Latvia',flag:'🇱🇻',type:'city',code:'RIX',daily:45,flight:540,region:'europe',tags:'art nouveau old town budget baltic'},
+  {name:'Vilnius',country:'Lithuania',flag:'🇱🇹',type:'city',code:'VNO',daily:45,flight:540,region:'europe',tags:'baroque budget old town hipster'},
+  {name:'Copenhagen',country:'Denmark',flag:'🇩🇰',type:'city',code:'CPH',daily:120,flight:560,region:'europe',tags:'hygge expensive bikes noma design'},
+  {name:'Stockholm',country:'Sweden',flag:'🇸🇪',type:'city',code:'ARN',daily:110,flight:565,region:'europe',tags:'archipelago design expensive abba'},
+  {name:'Oslo',country:'Norway',flag:'🇳🇴',type:'city',code:'OSL',daily:130,flight:570,region:'europe',tags:'fjords northern lights expensive'},
+  {name:'Helsinki',country:'Finland',flag:'🇫🇮',type:'city',code:'HEL',daily:100,flight:565,region:'europe',tags:'sauna design lakes expensive nordic'},
+  {name:'Reykjavik',country:'Iceland',flag:'🇮🇸',type:'city',code:'REK',daily:120,flight:480,region:'europe',tags:'northern lights geysers waterfalls'},
+  {name:'Zurich',country:'Switzerland',flag:'🇨🇭',type:'city',code:'ZRH',daily:150,flight:540,region:'europe',tags:'expensive alps banking chocolate'},
+  {name:'Geneva',country:'Switzerland',flag:'🇨🇭',type:'city',code:'GVA',daily:150,flight:540,region:'europe',tags:'expensive lake alps diplomatic'},
+  {name:'Brussels',country:'Belgium',flag:'🇧🇪',type:'city',code:'BRU',daily:80,flight:495,region:'europe',tags:'chocolate waffles beer eu headquarters'},
+  {name:'Edinburgh',country:'Scotland',flag:'🇬🇧',type:'city',code:'EDI',daily:90,flight:450,region:'europe',tags:'castle highlands whisky festival'},
+  {name:'Dublin',country:'Ireland',flag:'🇮🇪',type:'city',code:'DUB',daily:90,flight:460,region:'europe',tags:'pub guinness cliffs literature'},
+  {name:'London',country:'UK',flag:'🇬🇧',type:'city',code:'LHR',daily:110,flight:450,region:'europe',tags:'museums big ben tube theater history'},
+  {name:'Valletta',country:'Malta',flag:'🇲🇹',type:'city',code:'MLA',daily:65,flight:530,region:'europe',tags:'mediterranean island history baroque cheap'},
+  {name:'Gozo',country:'Malta',flag:'🇲🇹',type:'island',code:'MLA',daily:60,flight:530,region:'europe',tags:'diving azure window peaceful island'},
+  {name:'Bern',country:'Switzerland',flag:'🇨🇭',type:'city',code:'ZRH',daily:140,flight:540,region:'europe',tags:'bears alps capital clock tower'},
+  {name:'Innsbruck',country:'Austria',flag:'🇦🇹',type:'city',code:'INN',daily:80,flight:530,region:'europe',tags:'alps ski winter olympics golden roof'},
+  {name:'Tallinn',country:'Estonia',flag:'🇪🇪',type:'city',code:'TLL',daily:55,flight:550,region:'europe',tags:'medieval old town digital nomad'},
+  // LATIN AMERICA - Cities
+  {name:'Mexico City',country:'Mexico',flag:'🇲🇽',type:'city',code:'MEX',daily:45,flight:280,region:'latam',tags:'tacos history art museums budget'},
+  {name:'Cancún',country:'Mexico',flag:'🇲🇽',type:'city',code:'CUN',daily:55,flight:320,region:'latam',tags:'beach resort party cenotes caribbean'},
+  {name:'Tulum',country:'Mexico',flag:'🇲🇽',type:'city',code:'CUN',daily:60,flight:320,region:'latam',tags:'eco beach cenotes yoga ruins instagram'},
+  {name:'Oaxaca',country:'Mexico',flag:'🇲🇽',type:'city',code:'OAX',daily:35,flight:310,region:'latam',tags:'food culture mezcal budget crafts'},
+  {name:'Puerto Vallarta',country:'Mexico',flag:'🇲🇽',type:'city',code:'PVR',daily:55,flight:350,region:'latam',tags:'beach resort romantic gay friendly'},
+  {name:'San Cristóbal de las Casas',country:'Mexico',flag:'🇲🇽',type:'city',code:'SZT',daily:30,flight:350,region:'latam',tags:'highlands indigenous budget colonial'},
+  {name:'Medellín',country:'Colombia',flag:'🇨🇴',type:'city',code:'MDE',daily:38,flight:360,region:'latam',tags:'spring city transformation cable car'},
+  {name:'Cartagena',country:'Colombia',flag:'🇨🇴',type:'city',code:'CTG',daily:42,flight:380,region:'latam',tags:'colonial walled city caribbean beaches'},
+  {name:'Bogotá',country:'Colombia',flag:'🇨🇴',type:'city',code:'BOG',daily:40,flight:370,region:'latam',tags:'capital gold museum coffee history'},
+  {name:'Santa Marta',country:'Colombia',flag:'🇨🇴',type:'city',code:'SMR',daily:35,flight:390,region:'latam',tags:'lost city sierra nevada beach cheap'},
+  {name:'San Andrés',country:'Colombia',flag:'🇨🇴',type:'island',code:'ADZ',daily:50,flight:400,region:'latam',tags:'caribbean island crystal water colombia'},
+  {name:'Lima',country:'Peru',flag:'🇵🇪',type:'city',code:'LIM',daily:40,flight:420,region:'latam',tags:'food capital ceviche miraflores'},
+  {name:'Cusco',country:'Peru',flag:'🇵🇪',type:'city',code:'CUZ',daily:35,flight:440,region:'latam',tags:'inca machu picchu altitude history'},
+  {name:'Machu Picchu',country:'Peru',flag:'🇵🇪',type:'city',code:'CUZ',daily:50,flight:440,region:'latam',tags:'wonder world inca ruins mountains'},
+  {name:'Lake Titicaca',country:'Peru',flag:'🇵🇪',type:'city',code:'JUL',daily:30,flight:450,region:'latam',tags:'highest lake floating islands uros'},
+  {name:'Buenos Aires',country:'Argentina',flag:'🇦🇷',type:'city',code:'EZE',daily:40,flight:680,region:'latam',tags:'tango steak paris of south america'},
+  {name:'Patagonia',country:'Argentina',flag:'🇦🇷',type:'city',code:'USH',daily:60,flight:800,region:'latam',tags:'glaciers torres del paine hiking wild'},
+  {name:'Mendoza',country:'Argentina',flag:'🇦🇷',type:'city',code:'MDZ',daily:45,flight:700,region:'latam',tags:'wine andes mountains malbec outdoor'},
+  {name:'Santiago',country:'Chile',flag:'🇨🇱',type:'city',code:'SCL',daily:55,flight:650,region:'latam',tags:'andes modern wine atacama gateway'},
+  {name:'Atacama Desert',country:'Chile',flag:'🇨🇱',type:'city',code:'CJC',daily:60,flight:700,region:'latam',tags:'driest desert stargazing geysers salt'},
+  {name:'Easter Island',country:'Chile',flag:'🇨🇱',type:'island',code:'IPC',daily:80,flight:900,region:'latam',tags:'moai statues remote polynesia mystery'},
+  {name:'Rio de Janeiro',country:'Brazil',flag:'🇧🇷',type:'city',code:'GIG',daily:55,flight:580,region:'latam',tags:'carnival beaches christ redeemer samba'},
+  {name:'São Paulo',country:'Brazil',flag:'🇧🇷',type:'city',code:'GRU',daily:50,flight:570,region:'latam',tags:'megacity food art fashion nightlife'},
+  {name:'Salvador',country:'Brazil',flag:'🇧🇷',type:'city',code:'SSA',daily:40,flight:590,region:'latam',tags:'afro-brazilian culture pelourinho carnival'},
+  {name:'Florianópolis',country:'Brazil',flag:'🇧🇷',type:'island',code:'FLN',daily:50,flight:600,region:'latam',tags:'island beaches surfing nightlife southern'},
+  {name:'Fernando de Noronha',country:'Brazil',flag:'🇧🇷',type:'island',code:'FEN',daily:100,flight:650,region:'latam',tags:'paradise diving volcanic island unesco'},
+  {name:'Quito',country:'Ecuador',flag:'🇪🇨',type:'city',code:'UIO',daily:35,flight:400,region:'latam',tags:'middle of world altitude colonial budget'},
+  {name:'Galápagos Islands',country:'Ecuador',flag:'🇪🇨',type:'island',code:'GPS',daily:80,flight:500,region:'latam',tags:'unique wildlife darwin evolution'},
+  {name:'La Paz',country:'Bolivia',flag:'🇧🇴',type:'city',code:'LPB',daily:25,flight:530,region:'latam',tags:'highest capital budget death road witches'},
+  {name:'Uyuni Salt Flats',country:'Bolivia',flag:'🇧🇴',type:'city',code:'VVI',daily:30,flight:550,region:'latam',tags:'salt flat mirror reflection surreal'},
+  {name:'Asunción',country:'Paraguay',flag:'🇵🇾',type:'city',code:'ASU',daily:30,flight:560,region:'latam',tags:'budget overlooked capital south america'},
+  {name:'Montevideo',country:'Uruguay',flag:'🇺🇾',type:'city',code:'MVD',daily:50,flight:620,region:'latam',tags:'quality of life beach steak wine'},
+  {name:'Havana',country:'Cuba',flag:'🇨🇺',type:'city',code:'HAV',daily:40,flight:380,region:'latam',tags:'vintage cars cigars rum time capsule'},
+  {name:'Trinidad',country:'Cuba',flag:'🇨🇺',type:'city',code:'HAV',daily:35,flight:390,region:'latam',tags:'colonial salsa horse cobblestone budget'},
+  {name:'San José',country:'Costa Rica',flag:'🇨🇷',type:'city',code:'SJO',daily:55,flight:300,region:'latam',tags:'gateway nature eco rainforest pura vida'},
+  {name:'Manuel Antonio',country:'Costa Rica',flag:'🇨🇷',type:'city',code:'SJO',daily:70,flight:300,region:'latam',tags:'national park monkeys beach jungle'},
+  {name:'Arenal',country:'Costa Rica',flag:'🇨🇷',type:'city',code:'SJO',daily:65,flight:300,region:'latam',tags:'volcano hot springs adventure zip line'},
+  {name:'Panama City',country:'Panama',flag:'🇵🇦',type:'city',code:'PTY',daily:55,flight:290,region:'latam',tags:'canal casco viejo banking hub transit'},
+  {name:'Bocas del Toro',country:'Panama',flag:'🇵🇦',type:'island',code:'BOC',daily:45,flight:310,region:'latam',tags:'caribbean island backpacker chill beach'},
+  {name:'Belize City',country:'Belize',flag:'🇧🇿',type:'city',code:'BZE',daily:50,flight:310,region:'latam',tags:'reef diving caves blue hole adventure'},
+  {name:'Guatemala City',country:'Guatemala',flag:'🇬🇹',type:'city',code:'GUA',daily:30,flight:290,region:'latam',tags:'gateway colonial history volcanoes'},
+  {name:'Antigua',country:'Guatemala',flag:'🇬🇹',type:'city',code:'GUA',daily:35,flight:295,region:'latam',tags:'colonial spanish budget volcano views'},
+  {name:'Lake Atitlán',country:'Guatemala',flag:'🇬🇹',type:'city',code:'GUA',daily:30,flight:295,region:'latam',tags:'crater lake volcano indigenous budget'},
+  // CARIBBEAN ISLANDS
+  {name:'Punta Cana',country:'Dominican Republic',flag:'🇩🇴',type:'island',code:'PUJ',daily:70,flight:320,region:'caribbean',tags:'all inclusive beach resort caribbean palm'},
+  {name:'Santo Domingo',country:'Dominican Republic',flag:'🇩🇴',type:'city',code:'SDQ',daily:45,flight:310,region:'caribbean',tags:'first city americas colonial history'},
+  {name:'San Juan',country:'Puerto Rico',flag:'🇵🇷',type:'city',code:'SJU',daily:70,flight:300,region:'caribbean',tags:'old san juan US territory no passport'},
+  {name:'Nassau',country:'Bahamas',flag:'🇧🇸',type:'city',code:'NAS',daily:80,flight:280,region:'caribbean',tags:'paradise islands close to florida budget'},
+  {name:'Exumas',country:'Bahamas',flag:'🇧🇸',type:'island',code:'GGT',daily:100,flight:320,region:'caribbean',tags:'swimming pigs crystal water secluded'},
+  {name:'Montego Bay',country:'Jamaica',flag:'🇯🇲',type:'city',code:'MBJ',daily:65,flight:300,region:'caribbean',tags:'reggae beach resort all inclusive'},
+  {name:'Kingston',country:'Jamaica',flag:'🇯🇲',type:'city',code:'KIN',daily:55,flight:300,region:'caribbean',tags:'bob marley culture authentic blue mountains'},
+  {name:'Havana',country:'Cuba',flag:'🇨🇺',type:'city',code:'HAV',daily:40,flight:380,region:'caribbean',tags:'vintage cars cigars rum time capsule'},
+  {name:'Bridgetown',country:'Barbados',flag:'🇧🇧',type:'city',code:'BGI',daily:80,flight:380,region:'caribbean',tags:'beach cricket rum punch upscale'},
+  {name:'St. Lucia',country:'St. Lucia',flag:'🇱🇨',type:'island',code:'UVF',daily:85,flight:390,region:'caribbean',tags:'pitons rainforest volcano romantic honeymoon'},
+  {name:'Antigua',country:'Antigua & Barbuda',flag:'🇦🇬',type:'island',code:'ANU',daily:80,flight:390,region:'caribbean',tags:'365 beaches sailing english harbour'},
+  {name:'St. Kitts',country:'St. Kitts & Nevis',flag:'🇰🇳',type:'island',code:'SKB',daily:70,flight:380,region:'caribbean',tags:'volcanic scenic railroads uncrowded'},
+  {name:'Martinique',country:'France',flag:'🇫🇷',type:'island',code:'FDF',daily:85,flight:380,region:'caribbean',tags:'french island rum pelée volcano beach'},
+  {name:'Guadeloupe',country:'France',flag:'🇫🇷',type:'island',code:'PTP',daily:85,flight:380,region:'caribbean',tags:'french butterfly island beach waterfalls'},
+  {name:'Aruba',country:'Aruba',flag:'🇦🇼',type:'island',code:'AUA',daily:90,flight:350,region:'caribbean',tags:'dry island white beach constant breeze'},
+  {name:'Curaçao',country:'Curaçao',flag:'🇨🇼',type:'island',code:'CUR',daily:80,flight:360,region:'caribbean',tags:'colorful dutch island diving reef'},
+  {name:'Bonaire',country:'Bonaire',flag:'🇧🇶',type:'island',code:'BON',daily:75,flight:370,region:'caribbean',tags:'diving flamingos unspoiled reef budget'},
+  {name:'Trinidad',country:'Trinidad & Tobago',flag:'🇹🇹',type:'island',code:'POS',daily:60,flight:370,region:'caribbean',tags:'carnival culture oil bird watching'},
+  {name:'Tobago',country:'Trinidad & Tobago',flag:'🇹🇹',type:'island',code:'TAB',daily:65,flight:370,region:'caribbean',tags:'unspoiled reef diving turtle uncrowded'},
+  {name:'Grenada',country:'Grenada',flag:'🇬🇩',type:'island',code:'GND',daily:65,flight:380,region:'caribbean',tags:'spice island nutmeg chocolate diving'},
+  {name:'Sint Maarten',country:'Sint Maarten',flag:'🇸🇽',type:'island',code:'SXM',daily:85,flight:360,region:'caribbean',tags:'dual island french dutch airport beach'},
+  {name:'St. Barts',country:'France',flag:'🇫🇷',type:'island',code:'SBH',daily:200,flight:420,region:'caribbean',tags:'luxury celebrity exclusive french'},
+  {name:'Turks and Caicos',country:'Turks & Caicos',flag:'🇹🇨',type:'island',code:'PLS',daily:150,flight:350,region:'caribbean',tags:'grace bay crystal water luxury british'},
+  {name:'US Virgin Islands',country:'USA',flag:'🇺🇸',type:'island',code:'STT',daily:80,flight:310,region:'caribbean',tags:'no passport US white beach charter sail'},
+  {name:'Cayman Islands',country:'Cayman Islands',flag:'🇰🇾',type:'island',code:'GCM',daily:120,flight:330,region:'caribbean',tags:'seven mile beach diving banking luxury'},
+  // AFRICA
+  {name:'Marrakech',country:'Morocco',flag:'🇲🇦',type:'city',code:'RAK',daily:35,flight:580,region:'africa',tags:'medina souks spices djemaa el-fna budget'},
+  {name:'Fes',country:'Morocco',flag:'🇲🇦',type:'city',code:'FEZ',daily:30,flight:575,region:'africa',tags:'medieval medina tanneries budget oldest'},
+  {name:'Chefchaouen',country:'Morocco',flag:'🇲🇦',type:'city',code:'CMN',daily:30,flight:580,region:'africa',tags:'blue city rif mountains instagrammable'},
+  {name:'Casablanca',country:'Morocco',flag:'🇲🇦',type:'city',code:'CMN',daily:45,flight:570,region:'africa',tags:'white mosque modern hub business'},
+  {name:'Cairo',country:'Egypt',flag:'🇪🇬',type:'city',code:'CAI',daily:30,flight:650,region:'africa',tags:'pyramids sphinx nile ancient history'},
+  {name:'Luxor',country:'Egypt',flag:'🇪🇬',type:'city',code:'LXR',daily:28,flight:660,region:'africa',tags:'valley of kings karnak temple ancient'},
+  {name:'Hurghada',country:'Egypt',flag:'🇪🇬',type:'city',code:'HRG',daily:35,flight:650,region:'africa',tags:'red sea diving resort budget beach'},
+  {name:'Nairobi',country:'Kenya',flag:'🇰🇪',type:'city',code:'NBO',daily:42,flight:780,region:'africa',tags:'safari gateway national park bustling'},
+  {name:'Mombasa',country:'Kenya',flag:'🇰🇪',type:'city',code:'MBA',daily:38,flight:790,region:'africa',tags:'beach swahili coast fort jesus island'},
+  {name:'Maasai Mara',country:'Kenya',flag:'🇰🇪',type:'city',code:'MRE',daily:150,flight:820,region:'africa',tags:'great migration safari big five wildlife'},
+  {name:'Zanzibar',country:'Tanzania',flag:'🇹🇿',type:'island',code:'ZNZ',daily:55,flight:810,region:'africa',tags:'spice island pristine beach stone town'},
+  {name:'Serengeti',country:'Tanzania',flag:'🇹🇿',type:'city',code:'SEU',daily:180,flight:820,region:'africa',tags:'safari migration wildebeest lion pride'},
+  {name:'Dar es Salaam',country:'Tanzania',flag:'🇹🇿',type:'city',code:'DAR',daily:40,flight:800,region:'africa',tags:'gateway beach swahili coast budget'},
+  {name:'Kigali',country:'Rwanda',flag:'🇷🇼',type:'city',code:'KGL',daily:50,flight:850,region:'africa',tags:'cleanest city gorillas genocide memorial'},
+  {name:'Kampala',country:'Uganda',flag:'🇺🇬',type:'city',code:'EBB',daily:38,flight:840,region:'africa',tags:'gorilla trekking source of nile budget'},
+  {name:'Addis Ababa',country:'Ethiopia',flag:'🇪🇹',type:'city',code:'ADD',daily:35,flight:800,region:'africa',tags:'coffee ancient history african union'},
+  {name:'Cape Town',country:'South Africa',flag:'🇿🇦',type:'city',code:'CPT',daily:60,flight:900,region:'africa',tags:'table mountain winelands budget garden route'},
+  {name:'Johannesburg',country:'South Africa',flag:'🇿🇦',type:'city',code:'JNB',daily:55,flight:890,region:'africa',tags:'soweto apartheid gateway safari hub'},
+  {name:'Victoria Falls',country:'Zimbabwe',flag:'🇿🇼',type:'city',code:'VFA',daily:60,flight:950,region:'africa',tags:'wonder world bungee adventure zambia'},
+  {name:'Kruger National Park',country:'South Africa',flag:'🇿🇦',type:'city',code:'HLA',daily:120,flight:900,region:'africa',tags:'safari big five malaria game reserve'},
+  {name:'Lagos',country:'Nigeria',flag:'🇳🇬',type:'city',code:'LOS',daily:50,flight:850,region:'africa',tags:'megacity music afrobeats beach hustle'},
+  {name:'Accra',country:'Ghana',flag:'🇬🇭',type:'city',code:'ACC',daily:45,flight:820,region:'africa',tags:'west africa welcoming history democracy'},
+  {name:'Dakar',country:'Senegal',flag:'🇸🇳',type:'city',code:'DKR',daily:40,flight:830,region:'africa',tags:'westernmost africa beach music goree'},
+  {name:'Tunis',country:'Tunisia',flag:'🇹🇳',type:'city',code:'TUN',daily:35,flight:590,region:'africa',tags:'medina carthage budget beach sahara'},
+  {name:'Mauritius',country:'Mauritius',flag:'🇲🇺',type:'island',code:'MRU',daily:90,flight:950,region:'africa',tags:'indian ocean island luxury beach'},
+  {name:'Seychelles',country:'Seychelles',flag:'🇸🇨',type:'island',code:'SEZ',daily:150,flight:980,region:'africa',tags:'paradise islands granite boulders pristine'},
+  {name:'Madagascar',country:'Madagascar',flag:'🇲🇬',type:'island',code:'TNR',daily:40,flight:960,region:'africa',tags:'unique wildlife lemurs baobabs adventure'},
+  {name:'Réunion',country:'France',flag:'🇫🇷',type:'island',code:'RUN',daily:80,flight:970,region:'africa',tags:'volcanic island hiking caldera adventure'},
+  {name:'Djibouti',country:'Djibouti',flag:'🇩🇯',type:'city',code:'JIB',daily:70,flight:900,region:'africa',tags:'whale sharks salt lake diving unique'},
+  // MIDDLE EAST
+  {name:'Dubai',country:'UAE',flag:'🇦🇪',type:'city',code:'DXB',daily:100,flight:750,region:'asia',tags:'tallest buildings luxury shopping gold'},
+  {name:'Jordan',country:'Jordan',flag:'🇯🇴',type:'country',code:'AMM',daily:45,flight:700,region:'asia',tags:'petra dead sea wadi rum budget'},
+  {name:'Petra',country:'Jordan',flag:'🇯🇴',type:'city',code:'AMM',daily:50,flight:700,region:'asia',tags:'rose city nabataean treasury wonder'},
+  {name:'Wadi Rum',country:'Jordan',flag:'🇯🇴',type:'city',code:'AMM',daily:55,flight:700,region:'asia',tags:'desert mars camping stargazing bedouin'},
+  {name:'Oman',country:'Oman',flag:'🇴🇲',type:'country',code:'MCT',daily:60,flight:760,region:'asia',tags:'underrated budget safe wadis forts'},
+  {name:'Muscat',country:'Oman',flag:'🇴🇲',type:'city',code:'MCT',daily:60,flight:760,region:'asia',tags:'grand mosque harbour corniche budget safe'},
+  {name:'Doha',country:'Qatar',flag:'🇶🇦',type:'city',code:'DOH',daily:80,flight:740,region:'asia',tags:'stopover museum island city luxury'},
+  {name:'Beirut',country:'Lebanon',flag:'🇱🇧',type:'city',code:'BEY',daily:40,flight:720,region:'asia',tags:'nightlife food mountains resilient culture'},
+  {name:'Tel Aviv',country:'Israel',flag:'🇮🇱',type:'city',code:'TLV',daily:100,flight:760,region:'asia',tags:'beach tech startup scene nightlife'},
+  {name:'Jerusalem',country:'Israel',flag:'🇮🇱',type:'city',code:'TLV',daily:90,flight:760,region:'asia',tags:'holy city three religions ancient walls'},
+  // PACIFIC / OCEANIA
+  {name:'Sydney',country:'Australia',flag:'🇦🇺',type:'city',code:'SYD',daily:100,flight:1000,region:'pacific',tags:'opera house harbour beach bridge'},
+  {name:'Melbourne',country:'Australia',flag:'🇦🇺',type:'city',code:'MEL',daily:90,flight:990,region:'pacific',tags:'coffee culture art sports laneways'},
+  {name:'Gold Coast',country:'Australia',flag:'🇦🇺',type:'city',code:'OOL',daily:85,flight:990,region:'pacific',tags:'beach surfing theme parks hinterland'},
+  {name:'Cairns',country:'Australia',flag:'🇦🇺',type:'city',code:'CNS',daily:80,flight:990,region:'pacific',tags:'great barrier reef rainforest gateway'},
+  {name:'Bali',country:'Indonesia',flag:'🇮🇩',type:'island',code:'DPS',daily:40,flight:700,region:'asia',tags:'beach surf yoga rice fields ubud'},
+  {name:'Auckland',country:'New Zealand',flag:'🇳🇿',type:'city',code:'AKL',daily:90,flight:1050,region:'pacific',tags:'maori harbor gateway city of sails'},
+  {name:'Queenstown',country:'New Zealand',flag:'🇳🇿',type:'city',code:'ZQN',daily:100,flight:1080,region:'pacific',tags:'adventure capital bungee fjordland skiing'},
+  {name:'Fiji',country:'Fiji',flag:'🇫🇯',type:'island',code:'NAN',daily:80,flight:900,region:'pacific',tags:'islands resort honeymoon snorkel friendly'},
+  {name:'Tahiti',country:'French Polynesia',flag:'🇵🇫',type:'island',code:'PPT',daily:120,flight:950,region:'pacific',tags:'bora bora overwater bungalow french pacific'},
+  {name:'Bora Bora',country:'French Polynesia',flag:'🇵🇫',type:'island',code:'BOB',daily:200,flight:970,region:'pacific',tags:'turquoise lagoon luxury overwater most famous'},
+  {name:'Vanuatu',country:'Vanuatu',flag:'🇻🇺',type:'island',code:'VLI',daily:60,flight:950,region:'pacific',tags:'volcano diving kastom culture adventure'},
+  {name:'Solomon Islands',country:'Solomon Islands',flag:'🇸🇧',type:'island',code:'HIR',daily:55,flight:980,region:'pacific',tags:'wwii diving pristine adventure off beaten'},
+  {name:'Papua New Guinea',country:'Papua New Guinea',flag:'🇵🇬',type:'country',code:'POM',daily:60,flight:980,region:'pacific',tags:'tribal culture diving adventure untouched'},
+  {name:'Cook Islands',country:'Cook Islands',flag:'🇨🇰',type:'island',code:'RAR',daily:90,flight:960,region:'pacific',tags:'polynesian paradise lagoon dance pacific'},
+  {name:'Tonga',country:'Tonga',flag:'🇹🇴',type:'island',code:'TBU',daily:65,flight:970,region:'pacific',tags:'whale swimming polynesian budget pristine'},
+  {name:'Samoa',country:'Samoa',flag:'🇼🇸',type:'island',code:'APW',daily:60,flight:960,region:'pacific',tags:'polynesian fale beach culture budget'},
+  {name:'Guam',country:'Guam',flag:'🇬🇺',type:'island',code:'GUM',daily:75,flight:850,region:'pacific',tags:'us territory chamorro beach japanese culture'},
+  {name:'Palau',country:'Palau',flag:'🇵🇼',type:'island',code:'ROR',daily:90,flight:950,region:'pacific',tags:'pristine diving jellyfish lake marine sanctuary'},
+  {name:'Micronesia',country:'Micronesia',flag:'🇫🇲',type:'island',code:'PNI',daily:65,flight:940,region:'pacific',tags:'truk lagoon diving wwii wrecks remote'},
+];
+
+// ════ MONTH DATA ════
+const MONTH_DATA = {
+  all:[
+    {m:'Jan',price:420,type:'cheap',tip:'Post-holiday deals. Great for Asia & Caribbean.'},
+    {m:'Feb',price:390,type:'cheap',tip:'Lowest prices of the year. Best time to book.'},
+    {m:'Mar',price:450,type:'mid',tip:'Shoulder season begins. Spring Europe opens.'},
+    {m:'Apr',price:480,type:'mid',tip:'Spring shoulder — beautiful weather, decent prices.'},
+    {m:'May',price:510,type:'mid',tip:'Pre-summer sweet spot. Europe before crowds.'},
+    {m:'Jun',price:650,type:'peak',tip:'Summer peak begins. Book early or pay more.'},
+    {m:'Jul',price:720,type:'peak',tip:'Peak season globally. Highest prices of the year.'},
+    {m:'Aug',price:700,type:'peak',tip:'Still peak. School holidays drive prices up.'},
+    {m:'Sep',price:520,type:'mid',tip:'Shoulder returns! Still warm, crowds thin out.'},
+    {m:'Oct',price:460,type:'mid',tip:'One of the best months. Great value globally.'},
+    {m:'Nov',price:430,type:'cheap',tip:'Pre-Thanksgiving dip. Excellent deals available.'},
+    {m:'Dec',price:680,type:'peak',tip:'Holiday season. Prices spike Dec 20–Jan 5.'},
+  ],
+  europe:[
+    {m:'Jan',price:380,type:'cheap',tip:'Cheapest Europe flights. Cold but charming.'},
+    {m:'Feb',price:360,type:'cheap',tip:'Best time to score Europe deals.'},
+    {m:'Mar',price:420,type:'mid',tip:'Spring approaching, prices moderate.'},
+    {m:'Apr',price:500,type:'mid',tip:'Spring blooms! Still before peak prices.'},
+    {m:'May',price:540,type:'mid',tip:'Perfect weather, pre-summer pricing.'},
+    {m:'Jun',price:700,type:'peak',tip:'Peak begins. Book 3+ months ahead.'},
+    {m:'Jul',price:780,type:'peak',tip:'Absolute peak. Everything costs more.'},
+    {m:'Aug',price:760,type:'peak',tip:'Still peak. Crowds everywhere.'},
+    {m:'Sep',price:560,type:'mid',tip:'Golden month — great weather, lower prices.'},
+    {m:'Oct',price:480,type:'mid',tip:'Off-peak Europe. Excellent deals.'},
+    {m:'Nov',price:390,type:'cheap',tip:'Very cheap. Cold but festive.'},
+    {m:'Dec',price:640,type:'peak',tip:'Christmas markets spike prices.'},
+  ],
+  asia:[
+    {m:'Jan',price:560,type:'mid',tip:'Busy season SE Asia. Great weather.'},
+    {m:'Feb',price:480,type:'cheap',tip:'Quiet after CNY. Good deals.'},
+    {m:'Mar',price:440,type:'cheap',tip:'Shoulder — pleasant and affordable.'},
+    {m:'Apr',price:420,type:'cheap',tip:'Best value month for Asia flights.'},
+    {m:'May',price:460,type:'mid',tip:'Pre-monsoon. Hot but affordable.'},
+    {m:'Jun',price:500,type:'mid',tip:'Monsoon season = lower prices.'},
+    {m:'Jul',price:540,type:'mid',tip:'Mid-year. Moderate pricing.'},
+    {m:'Aug',price:580,type:'peak',tip:'Peak for Japan. Higher prices.'},
+    {m:'Sep',price:520,type:'mid',tip:'Post-monsoon shoulder. Good value.'},
+    {m:'Oct',price:490,type:'mid',tip:'Shoulder season. Comfortable weather.'},
+    {m:'Nov',price:530,type:'mid',tip:'Start of peak season.'},
+    {m:'Dec',price:680,type:'peak',tip:'Peak season. Book early.'},
+  ],
+  latam:[
+    {m:'Jan',price:400,type:'mid',tip:'Summer in South America. Beach season.'},
+    {m:'Feb',price:420,type:'peak',tip:'Carnival season. Prices spike in Brazil.'},
+    {m:'Mar',price:380,type:'mid',tip:'Good deals as Carnival ends.'},
+    {m:'Apr',price:350,type:'cheap',tip:'Shoulder season. Excellent value.'},
+    {m:'May',price:340,type:'cheap',tip:'Dry season begins in many regions.'},
+    {m:'Jun',price:360,type:'cheap',tip:'Best weather in Patagonia and Andes.'},
+    {m:'Jul',price:400,type:'mid',tip:'Peak Andes season. Some hikes packed.'},
+    {m:'Aug',price:390,type:'mid',tip:'Good conditions across the continent.'},
+    {m:'Sep',price:360,type:'cheap',tip:'Shoulder starts. Great value.'},
+    {m:'Oct',price:360,type:'cheap',tip:'Spring in South America. Lovely.'},
+    {m:'Nov',price:380,type:'mid',tip:'Pre-holiday building season.'},
+    {m:'Dec',price:460,type:'peak',tip:'Holiday season. Prices rise. Beach crowds.'},
+  ],
+  africa:[
+    {m:'Jan',price:650,type:'mid',tip:'Dry season East Africa. Peak game viewing.'},
+    {m:'Feb',price:620,type:'mid',tip:'Great wildlife. Calving season Serengeti.'},
+    {m:'Mar',price:580,type:'cheap',tip:'Green season begins. Fewer crowds.'},
+    {m:'Apr',price:550,type:'cheap',tip:'Long rains. Budget deals available.'},
+    {m:'May',price:540,type:'cheap',tip:'Cheapest month for Africa. Quiet season.'},
+    {m:'Jun',price:620,type:'mid',tip:'Dry season resumes. Migration begins.'},
+    {m:'Jul',price:750,type:'peak',tip:'Great Migration peak. Highest prices.'},
+    {m:'Aug',price:780,type:'peak',tip:'Peak safari season. Book 6 months ahead.'},
+    {m:'Sep',price:700,type:'peak',tip:'Still peak. Excellent game viewing.'},
+    {m:'Oct',price:620,type:'mid',tip:'Short rains start. Prices moderate.'},
+    {m:'Nov',price:580,type:'cheap',tip:'Green season. Fewer tourists.'},
+    {m:'Dec',price:660,type:'mid',tip:'Holiday season brings prices up.'},
+  ],
+  caribbean:[
+    {m:'Jan',price:450,type:'peak',tip:'Peak winter sun season. High demand.'},
+    {m:'Feb',price:470,type:'peak',tip:'Highest prices. Everyone escapes cold.'},
+    {m:'Mar',price:440,type:'peak',tip:'Spring break. Crowds and high prices.'},
+    {m:'Apr',price:380,type:'mid',tip:'Post spring break. Prices drop slightly.'},
+    {m:'May',price:320,type:'cheap',tip:'Start of low season. Great value.'},
+    {m:'Jun',price:300,type:'cheap',tip:'Hurricane season begins. Cheapest fares.'},
+    {m:'Jul',price:340,type:'cheap',tip:'Hurricane risk but budget prices.'},
+    {m:'Aug',price:330,type:'cheap',tip:'Lowest prices of the year.'},
+    {m:'Sep',price:310,type:'cheap',tip:'Cheapest month. Hurricane peak.'},
+    {m:'Oct',price:340,type:'cheap',tip:'Hurricane risk easing. Good deals.'},
+    {m:'Nov',price:390,type:'mid',tip:'Low season ending. Prices rising.'},
+    {m:'Dec',price:480,type:'peak',tip:'Holiday season. Christmas in the sun.'},
+  ],
+};
+
+// ════ UTILITIES ════
+function googleFlightsURL(destCode, originCode) {
+  const today = new Date();
+  const depart = new Date(today.getFullYear(), today.getMonth()+2, 15);
+  const ret = new Date(depart); ret.setDate(ret.getDate()+10);
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const from = originCode || 'JFK';
+  return `https://www.google.com/flights#flt=${from}.${destCode}.${fmt(depart)}*${destCode}.${from}.${fmt(ret)};c:USD;e:1;sd:1;t:f`;
+}
+
+// ════ CURSOR ════
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function a(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+
+// ════ STARS ════
+const se=document.getElementById('stars');
+for(let i=0;i<80;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2+.4;s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*60}%;--o:${(Math.random()*.6+.1).toFixed(2)};--d:${(Math.random()*3+1.5).toFixed(1)}s;--delay:-${(Math.random()*5).toFixed(1)}s;`;se.appendChild(s);}
+
+// ════ PLANE TRAIL ════
+const pw=document.getElementById('plane-wrapper'),tc=document.getElementById('plane-trail');
+function spawnTrail(){const r=pw.getBoundingClientRect();if(r.left>-160&&r.left<window.innerWidth+160){const d=document.createElement('div');d.className='trail-dot';d.style.left=(r.left+10)+'px';d.style.top=(r.top+r.height/2)+'px';tc.appendChild(d);setTimeout(()=>d.remove(),3000);}}
+setInterval(spawnTrail,120);
+
+// ════ PROGRESS ════
+const pb=document.getElementById('pgbar');
+window.addEventListener('scroll',()=>{pb.style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';updateNavDots();});
+
+// ════ CHAPTER NAV ════
+const navDots=document.querySelectorAll('.nav-dot');
+const SECTIONS=['hero','calc-section','besttime-section','explorer-section','chapters-section','budget-section','mindset-section','cta-section'];
+const navToggle=document.getElementById('nav-toggle');
+const chNav=document.getElementById('ch-nav');
+let navHidden=false;
+navToggle.addEventListener('click',()=>{navHidden=!navHidden;chNav.classList.toggle('hidden',navHidden);navToggle.textContent=navHidden?'›':'‹';});
+navDots.forEach((dot,i)=>{dot.addEventListener('click',()=>{const t=document.getElementById(SECTIONS[i]);if(t)t.scrollIntoView({behavior:'smooth'});});});
+function updateNavDots(){const center=window.scrollY+window.innerHeight*.4;let closest=0,minDist=Infinity;SECTIONS.forEach((id,i)=>{const el=document.getElementById(id);if(el){const dist=Math.abs(el.offsetTop-center);if(dist<minDist){minDist=dist;closest=i;}}});navDots.forEach((d,i)=>d.classList.toggle('active',i===closest));}
+
+// ════ COUNT UP ════
+function animCount(el,target,dur){let v=0;const step=target/(dur/16);const t=setInterval(()=>{v+=step;if(v>=target){v=target;clearInterval(t);}el.textContent=Math.floor(v)+(target>=50?'+':'');},16);}
+
+// ════ INTERSECTION OBSERVER ════
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;el.classList.add('visible');if(el.classList.contains('b-card')){const f=el.querySelector('.b-fill');if(f)setTimeout(()=>f.style.width=f.dataset.width+'%',200);}if(el.dataset.count)animCount(el,parseInt(el.dataset.count),1500);io.unobserve(el);});},{threshold:.15});
+document.querySelectorAll('.ch-card,.b-card,.m-item,.cta-title,.cta-sub,.route-dot-item,[data-count]').forEach(el=>io.observe(el));
+document.querySelectorAll('.ch-card').forEach((c,i)=>c.style.transitionDelay=(i*.06)+'s');
+
+// ════ PARALLAX ════
+window.addEventListener('scroll',()=>{const sy=window.scrollY;const hb=document.querySelector('.hero-bg');if(hb)hb.style.transform=`translateY(${sy*.3}px)`;});
+
+// ════ SEARCHABLE DROPDOWNS ════
+function buildSearchDropdown(inputId, dropId, hiddenId, data, isAirport) {
+  const inp = document.getElementById(inputId);
+  const drop = document.getElementById(dropId);
+  const hidden = document.getElementById(hiddenId);
+
+  function renderDropdown(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) { drop.classList.remove('open'); return; }
+    const matches = data.filter(item => {
+      const searchStr = isAirport
+        ? `${item.code} ${item.name} ${item.city} ${item.country}`.toLowerCase()
+        : `${item.name} ${item.country} ${item.type} ${item.tags}`.toLowerCase();
+      return searchStr.includes(q);
+    }).slice(0, 40);
+
+    if (!matches.length) {
+      drop.innerHTML = '<div class="dd-empty">No results found. Try a different search.</div>';
+      drop.classList.add('open'); return;
+    }
+    drop.innerHTML = matches.map(item => {
+      if (isAirport) {
+        return `<div class="dd-item" data-code="${item.code}" data-name="${item.city}, ${item.country}">
+          <span class="dd-flag">${item.flag}</span>
+          <div class="dd-main"><span class="dd-name">${item.city}</span><span class="dd-sub">${item.name} · ${item.country}</span></div>
+          <span class="dd-code">${item.code}</span>
+        </div>`;
+      } else {
+        return `<div class="dd-item" data-code="${item.code}" data-name="${item.name}, ${item.country}" data-daily="${item.daily}" data-flight="${item.flight}">
+          <span class="dd-flag">${item.flag}</span>
+          <div class="dd-main"><span class="dd-name">${item.name}</span><span class="dd-sub">${item.country} · ${item.type}</span></div>
+          <span class="dd-code">~$${item.daily}/day</span>
+        </div>`;
+      }
+    }).join('');
+    drop.classList.add('open');
+    drop.querySelectorAll('.dd-item').forEach(item => {
+      item.addEventListener('click', () => {
+        inp.value = item.dataset.name;
+        hidden.value = item.dataset.code;
+        if (!isAirport) {
+          document.getElementById('dest-daily').value = item.dataset.daily;
+          document.getElementById('dest-flight-base').value = item.dataset.flight;
+        }
+        drop.classList.remove('open');
+      });
+    });
+  }
+
+  inp.addEventListener('input', () => renderDropdown(inp.value));
+  inp.addEventListener('focus', () => { if(inp.value) renderDropdown(inp.value); });
+  document.addEventListener('click', e => { if (!inp.contains(e.target) && !drop.contains(e.target)) drop.classList.remove('open'); });
+}
+
+// Add hidden fields for daily/flight
+const calcPanel = document.querySelector('.calc-panel');
+const hDaily = document.createElement('input'); hDaily.type='hidden'; hDaily.id='dest-daily'; calcPanel.appendChild(hDaily);
+const hFlight = document.createElement('input'); hFlight.type='hidden'; hFlight.id='dest-flight-base'; calcPanel.appendChild(hFlight);
+
+buildSearchDropdown('origin-search','origin-dropdown','origin-code', AIRPORTS, true);
+buildSearchDropdown('dest-search','dest-dropdown','dest-code', WORLD_DESTINATIONS, false);
+
+// ════ FLIGHT CALCULATOR ════
+document.getElementById('calc-go').addEventListener('click',()=>{
+  const originName = document.getElementById('origin-search').value;
+  const originCode = document.getElementById('origin-code').value;
+  const destName = document.getElementById('dest-search').value;
+  const destCode = document.getElementById('dest-code').value;
+  const dateVal = document.getElementById('travel-date').value;
+  const travelers = parseInt(document.getElementById('travelers').value)||1;
+  const days = parseInt(document.getElementById('trip-days').value)||0;
+  const savings = parseFloat(document.getElementById('current-savings').value)||0;
+  const dailyPP = parseInt(document.getElementById('dest-daily').value)||50;
+  const baseFlightPP = parseInt(document.getElementById('dest-flight-base').value)||600;
+
+  if(!originName||!destName||!dateVal||!days){alert('Please fill in all fields.');return;}
+
+  const travelDate=new Date(dateVal);
+  const today=new Date();
+  const daysLeft=Math.max(1,Math.ceil((travelDate-today)/(1000*60*60*24)));
+  const flightTotal=baseFlightPP*travelers;
+  const tripLiving=dailyPP*days*travelers;
+  const totalCost=flightTotal+tripLiving+200;
+  const stillNeed=Math.max(0,totalCost-savings);
+  const pct=Math.min(100,Math.round((savings/totalCost)*100));
+
+  document.getElementById('r-flight').textContent='$'+flightTotal.toLocaleString();
+  document.getElementById('r-flight-sub').textContent=travelers>1?`$${baseFlightPP.toLocaleString()} × ${travelers}`:'round-trip est.';
+  document.getElementById('r-daily').textContent='$'+dailyPP;
+  document.getElementById('r-total').textContent='$'+totalCost.toLocaleString();
+  document.getElementById('r-total-sub').textContent=days+' days incl. flights';
+  document.getElementById('r-need').textContent='$'+stillNeed.toLocaleString();
+  document.getElementById('r-pct').textContent=pct+'%';
+  document.getElementById('r-days-left').textContent=daysLeft;
+
+  const saveDaily=stillNeed>0?(stillNeed/daysLeft).toFixed(2):0;
+  const saveWeekly=stillNeed>0?((stillNeed/daysLeft)*7).toFixed(0):0;
+  const saveMonthly=stillNeed>0?((stillNeed/daysLeft)*30).toFixed(0):0;
+
+  document.getElementById('r-save-daily').textContent='$'+saveDaily;
+  document.getElementById('r-save-weekly').textContent='$'+parseInt(saveWeekly).toLocaleString();
+  document.getElementById('r-save-monthly').textContent='$'+parseInt(saveMonthly).toLocaleString();
+  document.getElementById('results-title').textContent=`Budget plan: ${originName} → ${destName} · ${days} days · ${travelers} traveler${travelers>1?'s':''}`;
+
+  setTimeout(()=>{document.getElementById('r-bar').style.width=pct+'%';},300);
+
+  const tips=[];
+  if(saveMonthly>800)tips.push('🚀 Add a side hustle to hit your goal faster');
+  if(daysLeft<60)tips.push('⚡ Book NOW — prices rise inside 60 days');
+  if(daysLeft>180)tips.push('📅 Set a Google Flights alert for price drops');
+  tips.push('💳 Travel card sign-up bonus could cover 30–50% of your flight');
+  if(travelers>1)tips.push('👥 Split costs — group rates often available');
+  tips.push('🗓️ Fly midweek to save $80–$150 vs weekend');
+  document.getElementById('r-tips').innerHTML=tips.slice(0,4).map(t=>`<div class="tip-chip">${t}</div>`).join('');
+
+  const gfLink = googleFlightsURL(destCode, originCode);
+  let btn = document.getElementById('r-gf-btn');
+  if(!btn){btn=document.createElement('a');btn.id='r-gf-btn';btn.className='r-google-btn';btn.target='_blank';document.getElementById('calc-results').appendChild(btn);}
+  btn.href=gfLink;
+  btn.innerHTML=`✈ Check Live Price on Google Flights — ${originName} → ${destName}`;
+
+  document.getElementById('calc-results').style.display='block';
+  document.getElementById('calc-results').scrollIntoView({behavior:'smooth',block:'nearest'});
+});
+document.getElementById('travel-date').min=new Date().toISOString().split('T')[0];
+
+// ════ BEST TIME CHART ════
+function renderMonthChart(data){
+  const grid=document.getElementById('month-grid');grid.innerHTML='';
+  const max=Math.max(...data.map(d=>d.price));
+  data.forEach(d=>{const h=Math.round((d.price/max)*90);grid.innerHTML+=`<div class="month-col"><div class="month-bar-wrap"><div class="month-bar ${d.type}" style="height:0%" data-h="${h}"></div></div><div class="month-label">${d.m}</div><div class="month-price">~$${d.price}</div><div class="month-tip">${d.tip}</div></div>`;});
+  setTimeout(()=>{document.querySelectorAll('.month-bar').forEach(b=>b.style.height=b.dataset.h+'%');},100);
+}
+renderMonthChart(MONTH_DATA.all);
+document.getElementById('region-filter').addEventListener('change',function(){renderMonthChart(MONTH_DATA[this.value]||MONTH_DATA.all);});
+
+// ════ WORLD EXPLORER ════
+let currentFilter='all';
+let currentSearch='';
+let visibleCount=24;
+
+function getFilteredDests(){
+  // Deduplicate by name+country
+  const seen = new Set();
+  const unique = WORLD_DESTINATIONS.filter(d=>{const key=d.name+d.country;if(seen.has(key))return false;seen.add(key);return true;});
+  return unique.filter(d=>{
+    const matchFilter = currentFilter==='all'||d.type===currentFilter||(currentFilter==='cheap'&&d.flight<500);
+    const q=currentSearch.toLowerCase();
+    const matchSearch=!q||`${d.name} ${d.country} ${d.type} ${d.tags}`.toLowerCase().includes(q);
+    return matchFilter&&matchSearch;
+  });
+}
+
+function renderExplorer(){
+  const filtered=getFilteredDests();
+  const shown=filtered.slice(0,visibleCount);
+  document.getElementById('explorer-count').textContent=`${filtered.length} destinations`;
+  document.getElementById('load-more').style.display=filtered.length>visibleCount?'block':'none';
+  document.getElementById('dest-cards').innerHTML=shown.map(d=>`
+    <div class="dest-card-item" onclick="window.open('${googleFlightsURL(d.code)}','_blank')">
+      <div class="dc-top">
+        <span class="dc-flag">${d.flag}</span>
+        <span class="dc-type ${d.type}">${d.type}</span>
+      </div>
+      <div class="dc-name">${d.name}</div>
+      <div class="dc-sub">${d.country}</div>
+      <div class="dc-stats">
+        <div class="dc-stat"><div class="dc-stat-val">~$${d.daily}</div><div class="dc-stat-lbl">per day</div></div>
+        <div class="dc-stat"><div class="dc-stat-val">~$${d.flight}</div><div class="dc-stat-lbl">round trip</div></div>
+      </div>
+      <a class="dc-btn" href="${googleFlightsURL(d.code)}" target="_blank" onclick="event.stopPropagation()">
+        <span class="ldot"></span>Check Live Price
+      </a>
+    </div>
+  `).join('');
+}
+
+document.querySelectorAll('.exp-filter').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.exp-filter').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    currentFilter=this.dataset.ef;
+    visibleCount=24;
+    renderExplorer();
+  });
+});
+
+document.getElementById('explorer-search').addEventListener('input',function(){
+  currentSearch=this.value;visibleCount=24;renderExplorer();
+});
+
+document.getElementById('load-more').addEventListener('click',()=>{visibleCount+=24;renderExplorer();});
+
+renderExplorer();
+
+// ════ API KEY ════
+let API_KEY=localStorage.getItem('aviationstack_key')||'';
+function saveApiKey(){const key=document.getElementById('api-key-input').value.trim();if(!key){alert('Please paste your API key.');return;}API_KEY=key;localStorage.setItem('aviationstack_key',key);document.getElementById('api-modal').classList.remove('show');alert('✅ API key saved! Live prices will now appear.');}
+</script>
+
+<!-- ═══════════════════════════════════
+     PWA UI ELEMENTS
+═══════════════════════════════════ -->
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <div class="splash-plane">✈️</div>
+  <div class="splash-title">Broke <span class="amp">&</span> <em>Booked</em></div>
+  <div class="splash-sub">The Budget Travel Bible</div>
+  <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+</div>
+
+<!-- INSTALL BANNER (Android / Desktop) -->
+<div id="install-banner">
+  <div class="install-left">
+    <div class="install-icon">✈️</div>
+    <div class="install-text">
+      <div class="install-title">Broke &amp; Booked</div>
+      <div class="install-desc">Install as an app · Works offline</div>
+    </div>
+  </div>
+  <div class="install-actions">
+    <button class="install-btn" id="install-btn">Install App</button>
+    <button class="install-dismiss" id="install-dismiss" title="Dismiss">✕</button>
+  </div>
+</div>
+
+<!-- iOS INSTALL GUIDE -->
+<div id="ios-guide">
+  <div class="ios-title">
+    <span>📲 Install on iPhone</span>
+    <button class="install-dismiss" onclick="document.getElementById('ios-guide').classList.remove('show')">✕</button>
+  </div>
+  <div class="ios-steps">
+    <div class="ios-step">
+      <div class="ios-step-icon">⬆️</div>
+      <div class="ios-step-text">Tap the <strong>Share button</strong> at the bottom of Safari (the box with the arrow pointing up)</div>
+    </div>
+    <div class="ios-step">
+      <div class="ios-step-icon">➕</div>
+      <div class="ios-step-text">Scroll down and tap <strong>"Add to Home Screen"</strong></div>
+    </div>
+    <div class="ios-step">
+      <div class="ios-step-icon">✅</div>
+      <div class="ios-step-text">Tap <strong>"Add"</strong> — the app icon appears on your home screen instantly!</div>
+    </div>
+  </div>
+  <button class="ios-close" onclick="document.getElementById('ios-guide').classList.remove('show')">Got it!</button>
+</div>
+
+<!-- OFFLINE TOAST -->
+<div id="offline-toast">✈ You're offline — app still works!</div>
+<div id="online-toast">✅ Back online — live prices restored</div>
+
+<!-- ═══════════════════════════════════
+     PWA STYLES
+═══════════════════════════════════ -->
+<style>
+#splash{position:fixed;inset:0;z-index:99999;background:#060c14;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;animation:splashOut .5s 2.4s ease forwards;pointer-events:none;}
+@keyframes splashOut{to{opacity:0;}}
+.splash-plane{font-size:4rem;animation:splashBob 1.5s ease-in-out infinite;}
+@keyframes splashBob{0%,100%{transform:translateY(0) rotate(5deg);}50%{transform:translateY(-16px) rotate(-3deg);}}
+.splash-title{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,10vw,4rem);font-weight:900;color:#f5f0e8;line-height:1;text-align:center;}
+.splash-title em{font-style:italic;color:#d4a843;}
+.splash-title .amp{color:#c1440e;}
+.splash-sub{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.3em;color:rgba(245,240,232,.3);text-transform:uppercase;}
+.splash-bar{width:180px;height:2px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;}
+.splash-bar-fill{height:100%;background:linear-gradient(90deg,#c1440e,#d4a843);animation:splashLoad 2.2s ease forwards;}
+@keyframes splashLoad{from{width:0%;}to{width:100%;}}
+
+#install-banner{position:fixed;bottom:0;left:0;right:0;z-index:8000;background:rgba(6,12,20,.97);border-top:1px solid rgba(212,168,67,.35);backdrop-filter:blur(16px);padding:1.1rem 1.5rem;display:none;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;animation:bannerUp .4s ease;}
+@keyframes bannerUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+#install-banner.show{display:flex;}
+.install-left{display:flex;align-items:center;gap:.9rem;}
+.install-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#0d1b2a,#1a3a5c);border:1px solid rgba(212,168,67,.3);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.install-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#f5f0e8;}
+.install-desc{font-family:'DM Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:rgba(245,240,232,.35);text-transform:uppercase;margin-top:.15rem;}
+.install-actions{display:flex;align-items:center;gap:.75rem;}
+.install-btn{background:#d4a843;color:#0a0806;border:none;cursor:pointer;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;padding:.65rem 1.5rem;transition:transform .2s;white-space:nowrap;}
+.install-btn:hover{transform:translateY(-2px);}
+.install-dismiss{background:none;border:none;color:rgba(245,240,232,.25);cursor:pointer;font-size:1.1rem;padding:.25rem;}
+
+#ios-guide{position:fixed;bottom:0;left:0;right:0;z-index:8001;background:rgba(6,12,20,.97);border-top:1px solid rgba(212,168,67,.3);backdrop-filter:blur(16px);padding:2rem 1.5rem;display:none;flex-direction:column;gap:1.25rem;animation:bannerUp .4s ease;}
+#ios-guide.show{display:flex;}
+.ios-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:#f5f0e8;display:flex;justify-content:space-between;align-items:center;}
+.ios-steps{display:flex;flex-direction:column;gap:.9rem;}
+.ios-step{display:flex;align-items:center;gap:.85rem;}
+.ios-step-icon{font-size:1.4rem;min-width:32px;text-align:center;}
+.ios-step-text{font-size:.85rem;color:rgba(245,240,232,.6);line-height:1.5;}
+.ios-step-text strong{color:#f5f0e8;}
+.ios-close{background:rgba(212,168,67,.15);border:1px solid rgba(212,168,67,.25);color:#d4a843;font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;padding:.6rem 1.5rem;cursor:pointer;width:100%;}
+
+#offline-toast,#online-toast{position:fixed;top:1rem;left:50%;transform:translateX(-50%) translateY(-80px);font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;padding:.7rem 1.6rem;z-index:9000;transition:transform .4s ease;white-space:nowrap;border-radius:2px;}
+#offline-toast{background:rgba(193,68,14,.95);color:#f5f0e8;}
+#online-toast{background:rgba(46,204,113,.9);color:#0a0806;}
+#offline-toast.show,#online-toast.show{transform:translateX(-50%) translateY(0);}
+
+/* Bottom safe area padding for installed PWA */
+@media (display-mode: standalone){
+  body{padding-bottom:env(safe-area-inset-bottom);}
+  #ch-nav{top:calc(50% + env(safe-area-inset-top)/2);}
+}
+</style>
+
+<!-- ═══════════════════════════════════
+     PWA JAVASCRIPT
+═══════════════════════════════════ -->
+<script>
+// ═══ SERVICE WORKER REGISTRATION ═══
+if('serviceWorker' in navigator){
+  window.addEventListener('load', async ()=>{
+    try {
+      // Inline service worker as blob
+      const swCode = `
+        const CACHE = 'broke-booked-v1';
+        const ASSETS = [location.href];
+
+        self.addEventListener('install', e=>{
+          e.waitUntil(
+            caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())
+          );
+        });
+
+        self.addEventListener('activate', e=>{
+          e.waitUntil(
+            caches.keys().then(keys=>Promise.all(
+              keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))
+            )).then(()=>self.clients.claim())
+          );
+        });
+
+        self.addEventListener('fetch', e=>{
+          if(e.request.method!=='GET') return;
+          e.respondWith(
+            fetch(e.request)
+              .then(res=>{
+                const clone=res.clone();
+                caches.open(CACHE).then(c=>c.put(e.request,clone));
+                return res;
+              })
+              .catch(()=>caches.match(e.request).then(cached=>{
+                if(cached) return cached;
+                return new Response('<h1 style="font-family:sans-serif;padding:2rem;color:#c1440e">You are offline. Please reconnect to load Broke & Booked.</h1>',{headers:{'Content-Type':'text/html'}});
+              }))
+          );
+        });
+      `;
+      const blob = new Blob([swCode], {type:'application/javascript'});
+      const swUrl = URL.createObjectURL(blob);
+      const reg = await navigator.serviceWorker.register(swUrl, {scope:'/'});
+      console.log('✈ SW registered:', reg.scope);
+    } catch(e){
+      console.log('SW registration skipped:', e.message);
+    }
+  });
+}
+
+// ═══ INSTALL PROMPT (Android/Desktop) ═══
+let deferredPrompt = null;
+const installBanner = document.getElementById('install-banner');
+const installBtn = document.getElementById('install-btn');
+const installDismiss = document.getElementById('install-dismiss');
+
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  deferredPrompt = e;
+  setTimeout(()=> installBanner.classList.add('show'), 3000);
+});
+
+installBtn.addEventListener('click', async ()=>{
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const {outcome} = await deferredPrompt.userChoice;
+  if(outcome === 'accepted') console.log('✈ App installed!');
+  deferredPrompt = null;
+  installBanner.classList.remove('show');
+});
+
+installDismiss.addEventListener('click', ()=>{
+  installBanner.classList.remove('show');
+  localStorage.setItem('install-dismissed', Date.now());
+});
+
+// Don't show again if dismissed in last 3 days
+const dismissed = localStorage.getItem('install-dismissed');
+if(dismissed && Date.now() - dismissed < 3*24*60*60*1000){
+  // suppress
+}
+
+window.addEventListener('appinstalled', ()=>{
+  installBanner.classList.remove('show');
+  showToast('online', '✅ App installed! Find it on your home screen');
+});
+
+// ═══ iOS INSTALL GUIDE ═══
+const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+const iosGuide = document.getElementById('ios-guide');
+
+if(isIos && !isStandalone){
+  const iosShown = localStorage.getItem('ios-guide-shown');
+  if(!iosShown){
+    setTimeout(()=> iosGuide.classList.add('show'), 4000);
+    localStorage.setItem('ios-guide-shown', '1');
+  }
+}
+
+// ═══ OFFLINE / ONLINE DETECTION ═══
+function showToast(type, msg){
+  const el = document.getElementById(type+'-toast');
+  if(msg) el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=> el.classList.remove('show'), 3500);
+}
+
+window.addEventListener('offline', ()=> showToast('offline', '✈ You\'re offline — app still works!'));
+window.addEventListener('online',  ()=> showToast('online',  '✅ Back online — live prices restored'));
+
+// ═══ SPLASH REMOVE AFTER ANIMATION ═══
+setTimeout(()=>{
+  const splash = document.getElementById('splash');
+  if(splash){ splash.style.display='none'; }
+}, 3200);
+
+// ═══ ADD TO HOME SCREEN HINT BUTTON IN NAV ═══
+// Add an install dot to chapter nav if not already installed
+if(!isStandalone){
+  const nav = document.getElementById('ch-nav');
+  if(nav){
+    const installDot = document.createElement('div');
+    installDot.className = 'nav-dot';
+    installDot.style.background = 'rgba(212,168,67,.4)';
+    installDot.title = 'Install App';
+    installDot.innerHTML = '<span class="nav-tip">📲 Install App</span>';
+    installDot.addEventListener('click', ()=>{
+      if(isIos){ iosGuide.classList.add('show'); }
+      else if(deferredPrompt){ installBanner.classList.add('show'); }
+      else { alert('To install: use your browser menu and select "Add to Home Screen"'); }
+    });
+    nav.appendChild(installDot);
+  }
+}
+
+// ═══ STANDALONE MODE TWEAKS ═══
+if(isStandalone){
+  // Hide scroll hint when running as app
+  const hint = document.querySelector('.scroll-hint');
+  if(hint) hint.style.display = 'none';
+  console.log('✈ Running as installed PWA');
+}
+</script>
+
+</body>
+</html>
